@@ -24,32 +24,10 @@ with sync_playwright() as p:
 
     page.wait_for_timeout(2000)
 
-    page.evaluate("""
-        () => {
-            const v = document.querySelector("video");
-            if (!v) return;
-            v.style.display = "block";
-            v.style.visibility = "visible";
-            v.style.opacity = "1";
-            v.style.height = "auto";
-            v.style.width = "auto";
 
-            const s = v.querySelector("source");
-            if (s) {
-                s.style.display = "block";
-                s.style.visibility = "visible";
-                s.style.opacity = "1";
-                s.removeAttribute("hidden");
-            }
-        }
-    """)
-
-
-    # Wait for video to unlock
-    page.wait_for_selector("video source[src]")
 
     # Extract video URL
-    video_url = page.locator("video source").first.get_attribute("src")
+    video_url = "https://cdn-cf-east.streamable.com/video/mp4/ri37ps.mp4?Expires=1777842035795&amp;Key-Pair-Id=APKAIEYUVEN4EVB2OKEQ&amp;Signature=d0X~owv~Q-N1Ww~rTMZgB-l2GplY23~EwEhhIVvU3jnVzq6ywuFjdfx58wcatMibfg0lrfneIzOprZ~5ZeBB8uRQP1dF~09Mlelo7P--Yuimv9TAyIjhC8pax1AWfgQ9UQDbR2vOOOsA7Axl8ZRpteDZHDF70PbaUAHjTtL-O5WeBoQfMKXzgs42I6G-Ndur2vrPTRMYEdGNrB5Nh5rrvwMq0qYfVtoPcp-bOXhEaN2TA5hNiA8NDHTmwZpkFUxOeR3S3VQ2x10ZnzrKOqutrGDiZbq1hxoDEAAfylw3bLtEozPs-q~j0TIHBjz~bsZ4fr1QpcQsqcAE4WSGVe8sNA__"
     print("Video URL:", video_url)
 
     # Download using authenticated Playwright session
