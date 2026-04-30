@@ -22,7 +22,28 @@ with sync_playwright() as p:
     page.fill('form[name="video-password"] input[name="password"]', password)
     page.click('button[type="submit"]')
 
-    page.wait_for_timeout(10000)
+    page.wait_for_timeout(2000)
+
+    page.evaluate("""
+        () => {
+            const v = document.querySelector("video");
+            if (!v) return;
+            v.style.display = "block";
+            v.style.visibility = "visible";
+            v.style.opacity = "1";
+            v.style.height = "auto";
+            v.style.width = "auto";
+
+            const s = v.querySelector("source");
+            if (s) {
+                s.style.display = "block";
+                s.style.visibility = "visible";
+                s.style.opacity = "1";
+                s.removeAttribute("hidden");
+            }
+        }
+    """)
+
 
     # Wait for video to unlock
     page.wait_for_selector("video source[src]")
