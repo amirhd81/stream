@@ -22,6 +22,8 @@ with sync_playwright() as p:
     page.fill('form[name="video-password"] input[name="password"]', password)
     page.click('button[type="submit"]')
 
+    page.wait_for_timeout(10000)
+
     # Wait for video to unlock
     page.wait_for_selector("video source[src]")
 
