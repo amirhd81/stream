@@ -45,5 +45,5 @@ with sync_playwright() as p:
     # # Save
     # with open("video.mp4", "wb") as f:
     #     f.write(content)
-
+    browser.close()
     # print("Saved video.mp4")
