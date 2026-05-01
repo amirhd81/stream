@@ -32,7 +32,7 @@ with sync_playwright() as p:
 
     # Download using authenticated Playwright session
 
-    resp = context.request.get(video_url)
+    resp = await context.request.get(video_url)
 
     # print("Status:", resp.status)
     # print("Content-Type:", resp.headers.get("content-type"))
