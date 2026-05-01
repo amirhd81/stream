@@ -31,11 +31,19 @@ with sync_playwright() as p:
     print("Video URL:", video_url)
 
     # Download using authenticated Playwright session
-    response = context.request.get(video_url)
-    content = response.body()
 
-    # Save
-    with open("video.mp4", "wb") as f:
-        f.write(content)
+    resp = context.request.get(video_url)
 
-    print("Saved video.mp4")
+    print("Status:", resp.status)
+    print("Content-Type:", resp.headers.get("content-type"))
+
+    data = resp.body()
+    print("Downloaded bytes:", len(data))
+    # response = context.request.get(video_url)
+    # content = response.body()
+
+    # # Save
+    # with open("video.mp4", "wb") as f:
+    #     f.write(content)
+
+    # print("Saved video.mp4")
