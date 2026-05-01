@@ -34,13 +34,15 @@ with sync_playwright() as p:
 
     resp = context.request.get(video_url)
 
-    print("Status:", resp.status)
-    print("Content-Type:", resp.headers.get("content-type"))
+    # print("Status:", resp.status)
+    # print("Content-Type:", resp.headers.get("content-type"))
 
-    data = resp.body()
-    print("Downloaded bytes:", len(data))
+    # data = resp.body()
+    # print("Downloaded bytes:", len(data))
     # response = context.request.get(video_url)
     # content = response.body()
+
+    page.wait_for_timeout(100000)
 
     # # Save
     # with open("video.mp4", "wb") as f:
