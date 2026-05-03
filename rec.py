@@ -5,7 +5,8 @@ import sys
 chromiumPath = "/usr/bin/chromium-browser"
 
 def main():
-    url = "https://discord.com/channels/1171584364723847230/1199031302725312643"
+    # url = "https://discord.com/channels/1171584364723847230/1199031302725312643"
+    url = "https://www.varzesh3.com/"
     
     with sync_playwright() as p:
         browser = p.chromium.launch(
