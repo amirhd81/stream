@@ -20,10 +20,6 @@ def main():
         )
     
         page = context.new_page()
-        context.storage_state(
-            path="discord1.json"
-        )
-
         page.goto(url, wait_until="domcontentloaded")
 
         page.wait_for_timeout(30000 * 1)
