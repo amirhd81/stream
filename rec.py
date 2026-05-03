@@ -10,16 +10,18 @@ def main():
     with sync_playwright() as p:
         browser = p.chromium.launch(
             # user_data_dir="/root/strem/pro/Profile 41",
-            record_video_dir="videos/",
             storageState="state.json",
-            record_video_size={"width": 640, "height": 480},
+            # record_video_dir="videos/",
+            # record_video_size={"width": 640, "height": 480},
             headless=True,
             executable_path=chromiumPath,   # USE SYSTEM CHROMIUM
             args=["--no-sandbox", "--disable-gpu"],
         )
 
         context = browser.newContext({
-            storageState: "state.json"
+            storageState: "state.json",
+            record_video_dir="videos/",
+            record_video_size={"width": 640, "height": 480},
         });
 
     
