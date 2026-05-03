@@ -11,14 +11,14 @@ def main():
         context = p.chromium.launch_persistent_context(
             user_data_dir="/root/strem/pro/Profile 41",
             record_video_dir="videos/",
+            storageState="state.json",
             record_video_size={"width": 640, "height": 480},
             headless=True,
             executable_path=chromiumPath,   # USE SYSTEM CHROMIUM
-            args=["--no-sandbox", "--disable-gpu"]
+            args=["--no-sandbox", "--disable-gpu"],
         )
 
     
-
         page = context.new_page()
 
         stealth_sync(page)
@@ -26,10 +26,10 @@ def main():
 
         page.goto(url, wait_until="domcontentloaded")
         page.wait_for_timeout(2000)
-        page.locator("input#uid_10").fill("amir.hd.davoudi1381@gmail.com")
-        page.locator("input#uid_12").fill("@Lost4815162342")
-        page.locator("button[type='submit']").click()
-        page.wait_for_timeout(2000)
+        # page.locator("input#uid_10").fill("amir.hd.davoudi1381@gmail.com")
+        # page.locator("input#uid_12").fill("@Lost4815162342")
+        # page.locator("button[type='submit']").click()
+        # page.wait_for_timeout(2000)
         # page.wait_for_timeout(3000)
         # page.locator("button.buttonOver18").nth(1).click()
         # page.wait_for_timeout(2000)
