@@ -24,7 +24,7 @@ def split_rar():
     print(f"📦 Splitting into {SPLIT_SIZE} parts...")
     
     # run(f"mkdir {DOWNLOAD_DIR}")
-    run(f"mv video.mp4 {os.path.join(DOWNLOAD_DIR)}")
+    # run(f"mv video.mp4 {os.path.join(DOWNLOAD_DIR)}")
 
     video_path = os.path.join(DOWNLOAD_DIR, "video.mp4")
     if not os.path.exists(video_path):
@@ -209,8 +209,9 @@ async def main(url, password):
         r.raise_for_status()
 
         total = int(r.headers.get("content-length", 0))
+        video_path = os.path.join(DOWNLOAD_DIR, "video.mp4")
 
-        with open("video.mp4", "wb") as f, tqdm(
+        with open(video_path, "wb") as f, tqdm(
             total=total,
             unit="B",
             unit_scale=True,
