@@ -1,5 +1,4 @@
 from playwright.sync_api import sync_playwright
-from undetected_playwright import stealth_sync
 import sys
 
 chromiumPath = "/usr/bin/chromium-browser"
@@ -21,22 +20,11 @@ def main():
         )
     
         page = context.new_page()
-        stealth_sync(page)
+        context.storageState({ path: 'discord1.json' })
 
         page.goto(url, wait_until="domcontentloaded")
 
         page.wait_for_timeout(30000 * 1)
-        result = page.evaluate("""
-        () => {
-            return {
-                url: window.location.href,
-                hasLocalStorage: typeof window.localStorage !== "undefined",
-                entries: Object.entries(window.localStorage || {})
-            }
-        }
-        """)
-
-        print(result)
 
         html = page.content()
 
