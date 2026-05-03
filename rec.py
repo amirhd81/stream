@@ -24,6 +24,9 @@ def main():
         stealth_sync(page)
 
         page.goto(url, wait_until="domcontentloaded")
+
+        value = page.evaluate("Object.entries(localStorage)")
+        print(value)
         page.wait_for_timeout(60000 * 1)
 
         html = page.content()
