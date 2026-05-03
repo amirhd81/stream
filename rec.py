@@ -8,8 +8,8 @@ def main():
     url = "https://discord.com/channels/1171584364723847230/1199031302725312643"
     
     with sync_playwright() as p:
-        context = p.chromium.launch(
-            user_data_dir="/root/strem/pro/Profile 41",
+        browser = p.chromium.launch(
+            # user_data_dir="/root/strem/pro/Profile 41",
             record_video_dir="videos/",
             storageState="state.json",
             record_video_size={"width": 640, "height": 480},
@@ -17,6 +17,10 @@ def main():
             executable_path=chromiumPath,   # USE SYSTEM CHROMIUM
             args=["--no-sandbox", "--disable-gpu"],
         )
+
+        context = browser.newContext({
+            storageState: "state.json"
+        });
 
     
         page = context.new_page()
@@ -53,6 +57,7 @@ def main():
             f.write(str(co))
 
         context.close()
+        browser.close()
 
 if __name__ == "__main__":
     search = sys.argv[1]
