@@ -20,8 +20,8 @@ def main():
 
         context = browser.newContext({
             storageState: "state.json",
-            record_video_dir="videos/",
-            record_video_size={"width": 640, "height": 480},
+            record_video_dir: "videos/",
+            record_video_size: {"width": 640, "height": 480},
         });
 
     
