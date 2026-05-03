@@ -16,7 +16,7 @@ def main():
         )
 
         context = browser.new_context(
-            storage_state="state.json",
+            storage_state="discord.json",
             record_video_dir="videos/",
             record_video_size={"width": 640, "height": 480},
         )
