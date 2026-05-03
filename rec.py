@@ -10,7 +10,7 @@ def main():
         browser = p.chromium.launch(
             headless=True,
             executable_path=chromiumPath,
-            args=["--no-sandbox", "--disable-gpu"],
+            args=["--no-sandbox", "--enable-webgl", "--ignore-gpu-blocklist", "--use-angle=gl"],
         )
 
         context = browser.new_context(
