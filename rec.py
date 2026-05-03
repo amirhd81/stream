@@ -8,7 +8,7 @@ def main():
     url = "https://discord.com/channels/1171584364723847230/1199031302725312643"
     
     with sync_playwright() as p:
-        context = p.chromium.launch_persistent_context(
+        context = p.chromium.launch(
             user_data_dir="/root/strem/pro/Profile 41",
             record_video_dir="videos/",
             storageState="state.json",
