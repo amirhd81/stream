@@ -5,7 +5,7 @@ import sys
 chromiumPath = "/usr/bin/chromium-browser"   # your system chromium path
 
 def main():
-    url = "https://discord.com/login"
+    url = "https://discord.com/channels/1171584364723847230/1199031302725312643"
     
     with sync_playwright() as p:
         context = p.chromium.launch_persistent_context(
