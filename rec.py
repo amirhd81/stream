@@ -25,9 +25,9 @@ def main():
 
         page.goto(url, wait_until="domcontentloaded")
 
+        page.wait_for_timeout(30000 * 1)
         result = page.evaluate("() => Object.entries(localStorage)")
         print(result)
-        page.wait_for_timeout(60000 * 1)
 
         html = page.content()
 
