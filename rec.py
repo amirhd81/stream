@@ -20,7 +20,9 @@ def main():
         )
     
         page = context.new_page()
-        context.storage_state({ path: 'discord1.json' })
+        context.storage_state(
+            path="discord1.json"
+        )
 
         page.goto(url, wait_until="domcontentloaded")
 
