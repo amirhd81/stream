@@ -26,7 +26,16 @@ def main():
         page.goto(url, wait_until="domcontentloaded")
 
         page.wait_for_timeout(30000 * 1)
-        result = page.evaluate("() => Object.entries(localStorage)")
+        result = page.evaluate("""
+        () => {
+            return {
+                url: window.location.href,
+                hasLocalStorage: typeof window.localStorage !== "undefined",
+                entries: Object.entries(window.localStorage || {})
+            }
+        }
+        """)
+
         print(result)
 
         html = page.content()
