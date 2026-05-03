@@ -26,6 +26,8 @@ def split_rar():
     # run(f"mkdir {DOWNLOAD_DIR}")
     # run(f"mv video.mp4 {os.path.join(DOWNLOAD_DIR)}")
 
+    
+
     video_path = os.path.join(DOWNLOAD_DIR, "video.mp4")
     if not os.path.exists(video_path):
         # Fallback in case the extension wasn't mp4 despite merge_output_format
@@ -209,6 +211,7 @@ async def main(url, password):
         r.raise_for_status()
 
         total = int(r.headers.get("content-length", 0))
+        os.makedirs(DOWNLOAD_DIR, exist_ok=True)
         video_path = os.path.join(DOWNLOAD_DIR, "video.mp4")
 
         with open(video_path, "wb") as f, tqdm(
