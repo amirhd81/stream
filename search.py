@@ -24,7 +24,7 @@ def save_cache(cache):
 
 def extract_videos(url_or_query):
     """Generic extractor using yt-dlp"""
-    ydl_opts = {"quiet": True, "extract_flat": True}
+    ydl_opts = {"quiet": True, "extract_flat": True, "force_ipv4": True}
     with YoutubeDL(ydl_opts) as ydl:
         result = ydl.extract_info(url_or_query, download=False)
     return result.get("entries", [])
