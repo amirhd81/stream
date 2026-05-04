@@ -1,0 +1,31 @@
+Script started on 2026-05-04 12:17:39+00:00 [TERM="linux" TTY="/dev/tty1" COLUMNS="80" LINES="25"]
+[?2004hroot@srv7833336486:~/strem# dig NS avalin48.ir @8.8.8.8
+[?2004l
+; <<>> DiG 9.18.39-0ubuntu0.24.04.3-Ubuntu <<>> NS avalin48.ir @8.8.8.8
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: SERVFAIL, id: 13037
+;; flags: qr rd ra; QUERY: 1, ANSWER: 0, AUTHORITY: 0, ADDITIONAL: 1
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 512
+; EDE: 23 (Network Error): ([195.248.242.89] rcode=REFUSED for avalin48.ir/ns)
+; EDE: 23 (Network Error): ([185.202.113.178] rcode=REFUSED for avalin48.ir/ns)
+; EDE: 23 (Network Error): ([195.248.240.221] rcode=REFUSED for avalin48.ir/ns)
+; EDE: 23 (Network Error): ([195.248.242.94] rcode=REFUSED for avalin48.ir/ns)
+; EDE: 23 (Network Error): ([159.69.192.28] rcode=REFUSED for avalin48.ir/ns)
+; EDE: 23 (Network Error): ([185.208.172.38] rcode=REFUSED for avalin48.ir/ns)
+; EDE: 23 (Network Error): ([142.202.48.132] rcode=REFUSED for avalin48.ir/ns)
+; EDE: 22 (No Reachable Authority): (At delegation avalin48.ir for avalin48.ir/ns)
+;; QUESTION SECTION:
+;avalin48.ir.			IN	NS
+
+;; Query time: 143 msec
+;; SERVER: 8.8.8.8#53(8.8.8.8) (UDP)
+;; WHEN: Mon May 04 12:19:43 UTC 2026
+;; MSG SIZE  rcvd: 476
+
+[?2004hroot@srv7833336486:~/strem# exit
+[?2004lexit
+
+Script done on 2026-05-04 12:19:49+00:00 [COMMAND_EXIT_CODE="0"]
