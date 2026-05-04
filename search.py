@@ -127,7 +127,7 @@ def main():
     if selected:
         print(f"[green]Selected video URL:[/green] {selected}")
         fmt = input("Enter format (default=best): ").strip() or "best"
-        os.system(f"python downloader.py \"{selected}\" \"{fmt}\"")
+        os.system(f"python dl.py \"{selected}\" \"{fmt}\"")
     else:
         print("No selection made.")
 
