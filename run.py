@@ -3,9 +3,7 @@ import sys
 
 chromiumPath = "/usr/bin/chromium-browser"   # your system chromium path
 
-def main(search):
-    url = search
-    
+def main(url, search):    
     with sync_playwright() as p:
         browser = p.chromium.launch(
             headless=True,
@@ -43,7 +41,8 @@ def main(search):
         browser.close()
 
 if __name__ == "__main__":
-    search = sys.argv[1]
+    url = sys.argv[1]
+    search = sys.argv[2]
 
-    main(search)
+    main(url, search)
 
