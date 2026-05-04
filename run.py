@@ -4,7 +4,7 @@ import sys
 chromiumPath = "/usr/bin/chromium-browser"   # your system chromium path
 
 def main(search):
-    url = "https://www.pornhub.com"
+    url = search
     
     with sync_playwright() as p:
         browser = p.chromium.launch(
