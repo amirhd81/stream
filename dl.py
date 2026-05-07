@@ -17,6 +17,15 @@ def setup_env():
     """Ensure download directory exists."""
     os.makedirs(DOWNLOAD_DIR, exist_ok=True)
 
+def drive(files, batch_size=10, delay=8):
+    print("📤 Starting batch upload to GitHub...")
+
+    for f in files:
+        run(f"rclone --bind 0.0.0.0 copy -P \"{f}\" gdrive:/vps", cwd=DOWNLOAD_DIR)
+
+    
+    print("✅ All batches uploaded successfully.")
+
 def download_video(url, height):
     """Download the video using yt-dlp with IPv4 forced and specific resolution."""
     print(f"📥 Starting download at {height}p...")
@@ -135,7 +144,8 @@ def main(url, height):
     setup_env()
     download_video(url, height)
     parts = split_rar()
-    git_push_in_batches(parts, 10, 8)
+    drive(parts)
+    # git_push_in_batches(parts, 10, 8)
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
