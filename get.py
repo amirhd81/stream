@@ -98,7 +98,7 @@ def git_push_in_batches(files, batch_size=10, delay=8):
 def drive(files, batch_size=10, delay=8):
     print("📤 Starting batch upload to GitHub...")
 
-    for f in batch:
+    for f in files:
         run(f"rclone --bind 0.0.0.0 copy -P ./myfolder \"{f}\" gdrive:/vps", cwd=DOWNLOAD_DIR)
 
     run(f"rclone backend setpermission gdrive:/vps anyone reader")
