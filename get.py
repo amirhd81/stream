@@ -95,6 +95,19 @@ def git_push_in_batches(files, batch_size=10, delay=8):
 
     print("✅ All batches uploaded successfully.")
 
+def drive(files, batch_size=10, delay=8):
+    print("📤 Starting batch upload to GitHub...")
+
+    for f in batch:
+        run(f"rclone --bind 0.0.0.0 copy -P ./myfolder \"{f}\" gdrive:/vps", cwd=DOWNLOAD_DIR)
+
+    run(f"rclone backend setpermission gdrive:/vps anyone reader")
+
+    run(f" rclone link gdrive:/vps")
+
+    
+    print("✅ All batches uploaded successfully.")
+
 
 async def main(url, password):
     logfile = open("network_log.txt", "w", encoding="utf-8")
@@ -227,7 +240,8 @@ async def main(url, password):
                 progress.update(len(chunk))
 
     parts = split_rar()
-    git_push_in_batches(parts, 10, 8)
+    # git_push_in_batches(parts, 10, 8)
+    drive(parts)
 
 
 if __name__ == "__main__":
