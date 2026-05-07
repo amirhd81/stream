@@ -101,10 +101,6 @@ def drive(files, batch_size=10, delay=8):
     for f in files:
         run(f"rclone --bind 0.0.0.0 copy -P \"{f}\" gdrive:/vps", cwd=DOWNLOAD_DIR)
 
-    run(f"rclone backend setpermission gdrive:/vps anyone reader")
-
-    run(f" rclone link gdrive:/vps")
-
     
     print("✅ All batches uploaded successfully.")
 
