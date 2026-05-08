@@ -34,7 +34,7 @@ def download_video(url, height):
     # yt-dlp -4 --add-header 'Referer: https://www.tnaflix.com/' "ter-480p.mp4?rs=118k&rb=5392k&secure=g2mJZNdUd7etgCIzszbEPA==,1778294485"pmother-and-stepdaughter-480p.mp4?rs=118k&rb=5392k&secure=g2mJZNdUd7etgCIzszbEPA==,1778294485"
 
     # run(f"yt-dlp -4 --add-header 'Referer: https://www.patreon.com/' --downloader [m3u8]aria2c --downloader-args aria2c:-x:16:-k:1M:-4  -o '{os.path.join(DOWNLOAD_DIR, "video.%(ext)s")}' {url}")
-    run(f"yt-dlp -4 --add-header 'Referer: https://www.tnaflix.com/' --merge-output-format 'mp4' -o '{os.path.join(DOWNLOAD_DIR, "video.%(ext)s")}' {url}")
+    run(f"yt-dlp -4 --add-header 'Referer: https://www.tnaflix.com/' --merge-output-format 'mp4' -o '{os.path.join(DOWNLOAD_DIR, "video.%(ext)s")}' '{url}'")
 
 
 def split_rar():
