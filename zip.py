@@ -75,6 +75,17 @@ def git_push_in_batches(files, batch_size=10, delay=8):
 
     print("✅ All batches uploaded successfully.")
 
+
+def drive(files, batch_size=10, delay=8):
+    print("📤 Starting batch upload to GitHub...")
+
+    for f in files:
+        run(f"rclone --bind 0.0.0.0 copy -P \"{f}\" gdrive:/vps", cwd=DOWNLOAD_DIR)
+
+    
+    print("✅ All batches uploaded successfully.")
+
+
 def git_push(files):
     """Commit the split archive parts to git."""
     print(f"📤 Adding {len(files)} parts to Git...")
@@ -94,7 +105,7 @@ def git_push(files):
 def main():
     setup_env()
     parts = split_rar()
-    git_push_in_batches(parts, 10, 8)
+    drive(parts)
 
 if __name__ == "__main__": 
     main()
