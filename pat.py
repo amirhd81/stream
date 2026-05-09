@@ -33,8 +33,8 @@ def download_video(url, height):
 
     # run(f"wget https://s23.trafficdeposit.com/widi/81w6f9pzd1x5601zd2h5l4gzi1l0k2q/AlrmB7uNZ-yTrqZaev6kjQ/1778290678/633879013a27d/634f17bde2fd2.vid")
 
-    # run(f"yt-dlp -4 --add-header 'Referer: https://www.patreon.com/' --downloader [m3u8]aria2c --downloader-args aria2c:-x:16:-k:1M:-4  -o '{os.path.join(DOWNLOAD_DIR, "video.%(ext)s")}' {url}")
-    run(f"yt-dlp --add-header 'Referer: https://www.tnaflix.com/' -o '{os.path.join(DOWNLOAD_DIR, "video.%(ext)s")}' '{url}'")
+    run(f"yt-dlp -4 --add-header 'Referer: https://www.patreon.com/' --downloader [m3u8]aria2c --downloader-args aria2c:-x:16:-k:1M:-4  -o '{os.path.join(DOWNLOAD_DIR, "video.%(ext)s")}' {url}")
+    # run(f"yt-dlp --add-header 'Referer: https://www.tnaflix.com/' -o '{os.path.join(DOWNLOAD_DIR, "video.%(ext)s")}' '{url}'")
 
 
 def split_rar():
@@ -117,4 +117,4 @@ def main(url, height):
     # git_push_in_batches(parts, 10, 8)
 
 if __name__ == "__main__": 
-    main("https://sl112.tnaflix.com/85/30/8530186/window-cleaner-studs-dp-slutty-stepmother-and-stepdaughter-360p.mp4?rs=118k&rb=5392k&secure=-uDXlfgrmkmbe6isECFoxA==,1778323137", "480")
+    main("https://host.patreaction.com/stream.m3u8?token=cW1mNXZIeUgxTVRIbDl3ekNyN2VUdz09OmZrY3dqaG9Yc3pGY210R3lwcDZ5dG1rVDltZWxGaFk0VXR0Um1xYThnQ0dXQUxwMXBTeUNDUnNCenFiY1ZnVCtGYVUvaGNidzRkTTA4MGl2SkFxVXU2T3dsbVhSUmZhWTg4NkdnTldtVWhmYjNzUHdCOUlWV2czWnB3bDRYbmp4b1hnaisrVmpVWU16UGJ1U0dJT0ZySkwyRjNaUFFvMVh4eUhWQVl4bGpadFdJMnh1Ujhnd2JXVTQ0N2d6YWN2TFNiV1R0c244K1V4VU1EYzVicFNCVjk5MnhGR0xhQUxWZ2YzUnlMVG50RnlpbldkS2FUYWNEc3pCbDlobjF4WW9CclJmTzdMMDdlemtSRWYwczJlc0U4QWp1dXNXWElTcHhnWWdJVDFLNmpLbFNoMXV3VERrd1JPY0VsRVBqSDdZc2JQUVJRaHNLS1pyVU0vMDZYeDY3eXJ1WUN2KytocVZwMm5sRlJSbi9HNVBpMXFqWm5EbE9HL2pCRG8rMi94SUtINGdNZitlbVpxUlpjQ2w4UllDN25IZ0lmTm9rbWVNdWlaYlJZd1dhOGFoV1JvQWs4SFZuUVNVSHhldWorUWc2aDd3NmFiZGZQZVp1N1MyMlp6YzVlWFNFTVg5S2E5R29VeUdydFZpN1lqQS8vWUJqYkNJVWtOb3FmR0t5ZlpKbWJ0SXVyZmVHVnpOdDNsczZJaWM5K3BpSXFBS3NNY2EvNmd3TUNOODk5a1VuRVFjTkhZZ1pkYURHMUlzR3d6dGZwWUEyejZzdGRNRDJxQldTY1BnMEhqd05HcVk1YjZPYUlRaVJ3ajBiUDg1dXNTd0JHWW1RU1czSHpsNWwxYi9UL1prejBFRlpVL2lrZlJqTjNUcWQwZklVS1hZQ2dqRW42WkRkdTlxbEtINkI1akNuNlpyY0dTY213N1dWemsxc1RvMzlaN3dYYWdyT1NRZ0sySFlqMjhsWHh1TmhPV1dSQ1ZjZnRHZm4wQTVWWVpKa0dXalBmRmc0M3dxRHBNczlUZk5nM0RPbk9HYjhwZDdHSDJrR3Y1UmFwTkViUUo0a3NlK1RJQTRhODM0TjJYMmNBdUpLb0ZEcE9JL09lbmhmcjdoaER4SzcxbU5HZWxWVGVsM3FnT3p5bk03NkRFUlhlZ3l3VU9YTE1GRkgwZUplRVcvS0dKbEZ4WkNVaklQZW9HdlRoTlIybzlhSXlXODJxNlo2T280UEZIc3puaW82N3VrVTFlcmVzRTRIRXMybk9MNmJPM0xYVVBWL3Jncm9wQVNRWU03ZWk5VHgrelR2NE43T0t6aGxQaHZqbFRZamNER2JMaEJqVUFNNmM5cXpLeDNHTW94QlIxT0NTaFc&quality=medium", "480")
