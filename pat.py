@@ -33,8 +33,8 @@ def download_video(url, height):
 
     # run(f"wget https://s23.trafficdeposit.com/widi/81w6f9pzd1x5601zd2h5l4gzi1l0k2q/AlrmB7uNZ-yTrqZaev6kjQ/1778290678/633879013a27d/634f17bde2fd2.vid")
 
-    run(f"yt-dlp -4 --add-header 'Referer: https://www.patreon.com/' --downloader [m3u8]aria2c --downloader-args aria2c:-x:16:-k:1M:-4  -o '{os.path.join(DOWNLOAD_DIR, "video.%(ext)s")}' {url}")
-    # run(f"yt-dlp --add-header 'Referer: https://www.tnaflix.com/' -o '{os.path.join(DOWNLOAD_DIR, "video.%(ext)s")}' '{url}'")
+    # run(f"yt-dlp -4 --add-header 'Referer: https://www.patreon.com/' --downloader [m3u8]aria2c --downloader-args aria2c:-x:16:-k:1M:-4  -o '{os.path.join(DOWNLOAD_DIR, "video.%(ext)s")}' {url}")
+    run(f"yt-dlp -4 --add-header 'Referer: https://www.tnaflix.com/' -o '{os.path.join(DOWNLOAD_DIR, "video.%(ext)s")}' '{url}'")
 
 
 def split_rar():
@@ -117,4 +117,4 @@ def main(url, height):
     # git_push_in_batches(parts, 10, 8)
 
 if __name__ == "__main__": 
-    main("https://host.patreaction.com/stream.m3u8?token=T0xsMFBqaUt0NlEyUVgrRDNZeDdBZz09OnFWQk9ySUlUMjVFcGp2UmxLTnhjeDBHTnFYUFY3MHRIWitCSFJoaHUvakh1cWFFVTVnWUZhSm9IZVFTenFsNm0zWVpUNEVPcm9yTmZBOHhRR1Faby9RTWU3dmpKakMrVnp1dFhKQVA2cGdibzZwNnVLcEgrZTRmMlVSTnJQeHUzZUVqZkdpQmJxaG5ESUZwRzJOTDFTYTFIamJhbnBjMmd5SUN0YlZwVEZxZjZpdnM1TnluV0JUT0cxWk9oVXFOMGl3cUhRTHJsT3Y3RTBKUjdVa1M2RGlwRis2UTcrLzdkemdmQ1JWRXF4c1Zkanh0RmVjWXNTbWFMTGtxTlEyU2JyWmlLQzdQMjM0Nm1jTUI1a0xpczlyY2JDeHFRcW8xNU1kL21PU05ZaEI2SG9jaUd6N0Y1R20vaG5GYzE0Nk5KaFRnb2JDNjZleHpoRzA1SFI4V3VsZFV1Y01RTFJydUdPRmF6NldubUxKaHpBeGdtUGRzdUJmYmxVNlM3T2YxdnYzY2ZqOU5mVDlBLzhKMnphaE1qbkh0T29DeFpQc3pwZFpqY2E0YkwwT1luZGpRQWV1SldrclFad2IybmJaL3k3MnFpRm9XQ1l3UWJqNUp4RHhUQ1h6dnN0clZLT2hMS0VyYTlrTEUxN0RiLzV1NzgrOVNDOHNZUGJ0azNWbFA2eUJ1RUlpZGtXVFJaKzRhN1ZKakk0aS9TMHlWTnVWV2JlY1FhMnBlMURoc2FzNUxKL2wzTUpWdEJHNTlyVW5rOFdEUERpeWMvMVo4cGdIYk5RS3V2OHZqM3NRN0NhQWpUS3R0cHc2NlhneHVxcGRiS1BLK2pGWWNSbWpEc1VOdTF1b1dOOVdNZG5tTHU2MDJpV2QxcC9lN2NvTHgydE5mT2dMeERyNVZJTERSOXFoVk1SWEo1enROOUtjelFIaENaalJGenNHdDlLVVJqQ2hraDRyaW5OTkNXcnB3bGlMTisyY3dMVThkaG0wVERXVk5nRUNsbXZNQTExdHBLYjQrYUxmTTMyeW9FNUxBc2RjOThlZ1ZVeTd0RitTZDkyTmRpVUJlZ0dsMGxHSjVEaHBGb1BkalJzbXZXaHUvT0N6S2FIbVRWblpieVBOWW5kb293OWk1Uy9hZndOOUp6UmRSZC81Z0NVVTgxS1h4K3ZGU2I1NGFUNnJDNGRxZmJMNS9HRkVjRXV2blNKekc3aHYwZmRaTmxVSGRETXhwYjEzNEorL0pXYXZFeXlIYVBqTDJ5Sm9ESHpFYmRkR0RnMm9UTG5MUTZSb1V4RGt1T1I0aDNBNXB4bHNjc2pzb3NOdU0wQllCd2ZHbkltcHRYdUNmbVZjTXdJSkZrRGE2Q2JITzA&quality=medium", "480")
+    main("https://sl109.tnaflix.com/76/99/7699841/new-mina-chloe-lamour-window-cleaner-studs-dp-slutty-stepmom-and-daughter-gp2367-30-06-2022-480p.mp4", "480")
