@@ -225,7 +225,7 @@ def download_selected_video(video):
     fmt = input("Enter download format (default: best): ").strip() or "best"
 
     print("[cyan]Starting downloader...[/cyan]")
-    subprocess.run([sys.executable, "downloader.py", url, fmt])
+    subprocess.run([sys.executable, "dl.py", url, fmt])
 
 
 def main():
