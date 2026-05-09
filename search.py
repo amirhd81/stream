@@ -1,44 +1,63 @@
 import json
 import os
 import subprocess
+import sys
 from datetime import datetime
 from rich import print
 from rich.console import Console
 
 console = Console()
 
-CACHE_FILE = "yt_search_cache.json"
+CACHE_FILE = "yt_cache.json"
 RESULTS_PER_PAGE = 10
+SEARCH_CAP = 100
 
 
 def load_cache():
     if not os.path.exists(CACHE_FILE):
         return {}
-    with open(CACHE_FILE, "r", encoding="utf-8") as f:
-        return json.load(f)
+    try:
+        with open(CACHE_FILE, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except Exception:
+        return {}
 
 
 def save_cache(cache):
     with open(CACHE_FILE, "w", encoding="utf-8") as f:
-        json.dump(cache, f, indent=2, ensure_ascii=False)
+        json.dump(cache, f, ensure_ascii=False, indent=2)
 
 
-def run_yt_dlp_json(target):
-    cmd = ["yt-dlp", "-4", "-J", target]
-    result = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8")
+def run_yt_dlp_json(target, playlist_start=None, playlist_end=None):
+    cmd = ["yt-dlp", "-4", "--flat-playlist", "-J"]
+
+    if playlist_start is not None:
+        cmd += ["--playlist-start", str(playlist_start)]
+    if playlist_end is not None:
+        cmd += ["--playlist-end", str(playlist_end)]
+
+    cmd.append(target)
+
+    result = subprocess.run(
+        cmd,
+        capture_output=True,
+        text=True,
+        encoding="utf-8"
+    )
+
     if result.returncode != 0:
-        print("[red]yt‑dlp error:[/red]")
-        print(result.stderr)
+        print("[red]yt-dlp error:[/red]")
+        print(result.stderr.strip())
         return None
+
     try:
         return json.loads(result.stdout)
     except json.JSONDecodeError:
-        print("[red]Failed to parse yt‑dlp JSON[/red]")
+        print("[red]Failed to parse yt-dlp JSON output[/red]")
         return None
 
 
-def extract_entries(target):
-    data = run_yt_dlp_json(target)
+def extract_entries(data):
     if not data:
         return []
     if "entries" in data and data["entries"]:
@@ -46,144 +65,196 @@ def extract_entries(target):
     return [data]
 
 
-def search_youtube(query):
-    cache = load_cache()
-    key = f"search|{query}"
-    if key in cache:
-        print("[yellow]Loaded from cache[/yellow]")
-        return cache[key]
-    vids = extract_entries(f"ytsearch100:{query}")
-    cache[key] = vids
-    save_cache(cache)
-    return vids
-
-
-def search_in_channel(channel_url, keyword):
-    cache = load_cache()
-    key = f"channel_search|{channel_url}|{keyword}"
-    if key in cache:
-        print("[yellow]Loaded from cache[/yellow]")
-        return cache[key]
-    target = f"{channel_url}/search?query={keyword}"
-    vids = extract_entries(target)
-    cache[key] = vids
-    save_cache(cache)
-    return vids
-
-
-def list_channel_uploads(channel_url):
-    cache = load_cache()
-    key = f"channel_uploads|{channel_url}"
-    if key in cache:
-        print("[yellow]Loaded from cache[/yellow]")
-        return cache[key]
-    target = f"{channel_url}/videos"
-    vids = extract_entries(target)
-    cache[key] = vids
-    save_cache(cache)
-    return vids
-
-
 def time_ago(upload_date):
     if not upload_date:
-        return "Unknown date"
+        return "unknown date"
     try:
         dt = datetime.strptime(upload_date, "%Y%m%d")
         delta = datetime.now() - dt
         days = delta.days
-        if days < 1:
+
+        if days < 0:
+            return "unknown date"
+        if days == 0:
             return "today"
-        elif days == 1:
+        if days == 1:
             return "1 day ago"
-        elif days < 30:
+        if days < 30:
             return f"{days} days ago"
-        elif days < 365:
+        if days < 365:
             months = days // 30
-            return f"{months} month{'s' if months > 1 else ''} ago"
-        else:
-            years = days // 365
-            return f"{years} year{'s' if years > 1 else ''} ago"
+            return f"{months} month{'s' if months != 1 else ''} ago"
+        years = days // 365
+        return f"{years} year{'s' if years != 1 else ''} ago"
     except Exception:
-        return "Unknown date"
+        return "unknown date"
 
 
 def get_video_url(video):
-    for key in ("webpage_url", "url", "id"):
-        val = video.get(key)
-        if val:
-            if val.startswith("http"):
-                return val
-            return f"https://www.youtube.com/watch?v={val}"
+    webpage_url = video.get("webpage_url")
+    if webpage_url:
+        return webpage_url
+
+    url = video.get("url")
+    if url and isinstance(url, str) and url.startswith("http"):
+        return url
+
+    video_id = video.get("id")
+    if video_id:
+        return f"https://www.youtube.com/watch?v={video_id}"
+
     return None
 
 
-def paginate_results(videos):
-    total = len(videos)
-    page = 0
+def fetch_page(target, cache_key_base, page):
+    cache = load_cache()
+    cache_key = f"{cache_key_base}|page:{page}"
+
+    if cache_key in cache:
+        print(f"[yellow]Loaded page {page} from cache[/yellow]")
+        return cache[cache_key]
+
+    start = (page - 1) * RESULTS_PER_PAGE + 1
+    end = page * RESULTS_PER_PAGE
+
+    data = run_yt_dlp_json(target, playlist_start=start, playlist_end=end)
+    entries = extract_entries(data)
+
+    cache[cache_key] = entries
+    save_cache(cache)
+
+    return entries
+
+
+def display_videos(videos, page, header):
+    console.clear()
+    print(f"[bold cyan]{header} - Page {page}[/bold cyan]\n")
+
+    for i, vid in enumerate(videos, start=1):
+        title = vid.get("title", "No title")
+        channel = vid.get("channel") or vid.get("uploader") or "Unknown channel"
+        age = time_ago(vid.get("upload_date"))
+        print(f"[green][{i}][/green] {title} [dim]- {channel}, {age}[/dim]")
+
+    print("\n[bold yellow]Commands:[/bold yellow] [n] next, [p] previous, [q] quit, [1-10] select")
+
+
+def paginate_target(target, cache_key_base, header):
+    page = 1
+
     while True:
-        start = page * RESULTS_PER_PAGE
-        end = min(start + RESULTS_PER_PAGE, total)
-        console.clear()
-        print(f"[bold cyan]Results (Page {page + 1})[/bold cyan]\n")
+        videos = fetch_page(target, cache_key_base, page)
 
-        for i in range(start, end):
-            vid = videos[i]
-            title = vid.get("title", "No title")
-            channel = vid.get("channel") or vid.get("uploader") or "Unknown"
-            age = time_ago(vid.get("upload_date"))
-            print(f"[{i}] {title} [dim]- {channel}, {age}[/dim]")
+        if not videos:
+            if page == 1:
+                print("[red]No results found.[/red]")
+                return None
+            print("[red]No more results.[/red]")
+            page -= 1
+            continue
 
-        print("\n[n] next | [p] prev | [q] quit | number = select")
-        cmd = input("Command: ").strip().lower()
+        display_videos(videos, page, header)
+        cmd = input("Enter command: ").strip().lower()
+
         if cmd == "n":
-            if end < total:
-                page += 1
+            page += 1
         elif cmd == "p":
-            if page > 0:
+            if page > 1:
                 page -= 1
         elif cmd == "q":
             return None
         elif cmd.isdigit():
             idx = int(cmd)
-            if 0 <= idx < total:
-                return videos[idx]
+            if 1 <= idx <= len(videos):
+                return videos[idx - 1]
+            else:
+                print("[red]Invalid selection.[/red]")
+        else:
+            print("[red]Invalid command.[/red]")
+
+
+def global_search():
+    query = input("Enter search query: ").strip()
+    if not query:
+        print("[red]Query cannot be empty.[/red]")
+        return None
+
+    target = f"ytsearch{SEARCH_CAP}:{query}"
+    return paginate_target(target, f"global_search|{query}", f"Search: {query}")
+
+
+def channel_uploads():
+    channel_url = input("Enter channel URL: ").strip()
+    if not channel_url:
+        print("[red]Channel URL cannot be empty.[/red]")
+        return None
+
+    target = f"{channel_url}/videos"
+    return paginate_target(target, f"channel_uploads|{channel_url}", f"Uploads: {channel_url}")
+
+
+def channel_search():
+    channel_url = input("Enter channel URL: ").strip()
+    if not channel_url:
+        print("[red]Channel URL cannot be empty.[/red]")
+        return None
+
+    query = input("Enter search term inside the channel: ").strip()
+    if not query:
+        print("[red]Search term cannot be empty.[/red]")
+        return None
+
+    # This may work depending on extractor behavior
+    target = f"{channel_url}/search?query={query}"
+    return paginate_target(
+        target,
+        f"channel_search|{channel_url}|{query}",
+        f"Channel Search: {query}"
+    )
+
+
+def download_selected_video(video):
+    url = get_video_url(video)
+    if not url:
+        print("[red]Could not determine video URL.[/red]")
+        return
+
+    print(f"\nSelected: [bold]{video.get('title', 'No title')}[/bold]")
+    print(f"URL: [blue]{url}[/blue]")
+
+    fmt = input("Enter download format (default: best): ").strip() or "best"
+
+    print("[cyan]Starting downloader...[/cyan]")
+    subprocess.run([sys.executable, "downloader.py", url, fmt])
 
 
 def main():
-    print("[bold magenta]YouTube Browser[/bold magenta]\n")
-    print("Modes:\n[1] Global search\n[2] Search in channel\n[3] Channel uploads\n")
-    mode = input("Choose [1/2/3]: ").strip()
-    videos = []
-    if mode == "1":
-        query = input("Search: ").strip()
-        videos = search_youtube(query)
-    elif mode == "2":
-        channel = input("Channel URL: ").strip()
-        keyword = input("Keyword: ").strip()
-        videos = search_in_channel(channel, keyword)
-    elif mode == "3":
-        channel = input("Channel URL: ").strip()
-        videos = list_channel_uploads(channel)
-    else:
-        print("[red]Invalid choice[/red]")
-        return
+    while True:
+        print("\n[bold magenta]YouTube Browser[/bold magenta]")
+        print("[1] Global search")
+        print("[2] Channel uploads")
+        print("[3] Search inside a channel")
+        print("[q] Quit")
 
-    if not videos:
-        print("[red]No results found[/red]")
-        return
+        choice = input("Choose an option: ").strip().lower()
 
-    sel = paginate_results(videos)
-    if not sel:
-        print("No selection made.")
-        return
+        selected_video = None
 
-    url = get_video_url(sel)
-    if not url:
-        print("[red]Invalid URL[/red]")
-        return
+        if choice == "1":
+            selected_video = global_search()
+        elif choice == "2":
+            selected_video = channel_uploads()
+        elif choice == "3":
+            selected_video = channel_search()
+        elif choice == "q":
+            print("Goodbye.")
+            break
+        else:
+            print("[red]Invalid option.[/red]")
+            continue
 
-    fmt = input("Format (default=best): ").strip() or "best"
-    subprocess.run(["python", "dl.py", url, fmt])
+        if selected_video:
+            download_selected_video(selected_video)
 
 
 if __name__ == "__main__":
