@@ -117,4 +117,4 @@ def main(url, height):
     # git_push_in_batches(parts, 10, 8)
 
 if __name__ == "__main__": 
-    main("https://sl112.tnaflix.com/85/30/8530186/window-cleaner-studs-dp-slutty-stepmother-and-stepdaughter-480p.mp4?rs=118k&rb=5392k&secure=g2mJZNdUd7etgCIzszbEPA==,1778294485", "480")
+    main("https://www.whoreshub.com/get_file/7/4fda9c048fd6ae5d7399447e892302f0/86000/86424/86424.mp4/?v-acctoken=OTY5fDYzNDcwfDB8NzMwMGM3MjE3M2YzNTE5YmI1ZmY2MzAwNGI4YTE1MTE26223f32022985dd&rnd=1778286569188", "480")
