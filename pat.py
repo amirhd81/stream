@@ -34,7 +34,7 @@ def download_video(url, height):
     # run(f"wget https://s23.trafficdeposit.com/widi/81w6f9pzd1x5601zd2h5l4gzi1l0k2q/AlrmB7uNZ-yTrqZaev6kjQ/1778290678/633879013a27d/634f17bde2fd2.vid")
 
     # run(f"yt-dlp -4 --add-header 'Referer: https://www.patreon.com/' --downloader [m3u8]aria2c --downloader-args aria2c:-x:16:-k:1M:-4  -o '{os.path.join(DOWNLOAD_DIR, "video.%(ext)s")}' {url}")
-    run(f"yt-dlp -4 --add-header 'Referer: https://www.tnaflix.com/' -o '{os.path.join(DOWNLOAD_DIR, "video.%(ext)s")}' '{url}'")
+    run(f"yt-dlp -4 --downloader [m3u8]aria2c --downloader-args aria2c:-x:16:-k:1M:-4 -f 480p -o '{os.path.join(DOWNLOAD_DIR, "video.%(ext)s")}' '{url}'")
 
 
 def split_rar():
@@ -117,4 +117,4 @@ def main(url, height):
     # git_push_in_batches(parts, 10, 8)
 
 if __name__ == "__main__": 
-    main("https://sl109.tnaflix.com/76/99/7699841/new-mina-chloe-lamour-window-cleaner-studs-dp-slutty-stepmom-and-daughter-gp2367-30-06-2022-480p.mp4", "480")
+    main("https://eporner.com/video-SqDIq9JS1jP/chloe-lamour-and-mina-window-cleaner-studs-dp-slutty-stepmother-and-daughter-gp2367/", "480")
