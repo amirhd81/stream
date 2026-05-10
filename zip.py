@@ -43,7 +43,7 @@ def split_rar():
     )
 
     # Remove original video after archiving
-    os.remove(video_path)
+    # os.remove(video_path)
 
     return parts
 
