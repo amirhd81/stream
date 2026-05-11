@@ -131,24 +131,24 @@ async def main(url, password):
         page.on("request", lambda req: asyncio.create_task(log_request(req)))
         page.on("response", lambda res: asyncio.create_task(log_response(res)))
 
-        await page.fill('form[name="video-password"] input[name="password"]', password)
-        await page.click('button[type="submit"]')
+        # await page.fill('form[name="video-password"] input[name="password"]', password)
+        # await page.click('button[type="submit"]')
 
-        print(True, "button clicked")
+        # print(True, "button clicked")
 
-        await page.wait_for_timeout(5000)
-        await page.evaluate("""
-        () => {
-          const el = document.querySelector('.svp-controls');
-          if (el) {
-            el.style.setProperty('opacity', '1', 'important');
-            el.style.setProperty('visibility', 'visible', 'important');
-            el.style.setProperty('pointer-events', 'auto', 'important');
-          }
-        }
-        """)
+        # await page.wait_for_timeout(5000)
+        # await page.evaluate("""
+        # () => {
+        #   const el = document.querySelector('.svp-controls');
+        #   if (el) {
+        #     el.style.setProperty('opacity', '1', 'important');
+        #     el.style.setProperty('visibility', 'visible', 'important');
+        #     el.style.setProperty('pointer-events', 'auto', 'important');
+        #   }
+        # }
+        # """)
 
-        html_text = await page.inner_html("div.svp-desktop-player")
+        # html_text = await page.inner_html("div.svp-desktop-player")
         await page.screenshot(path="page.png", full_page=True)
 
         # # print('before hover')
@@ -156,10 +156,10 @@ async def main(url, password):
         # # await page.wait_for_timeout(5000)
         # # print('after hover')
 
-        # # co = await page.content()
+        co = await page.content()
         
-        # # with open("div.html", "w") as f:
-        # #     f.write(str(co))
+        with open("div.html", "w") as f:
+            f.write(str(co))
             
 
         # # Click the Options button by aria-label
@@ -198,46 +198,46 @@ async def main(url, password):
     headers = {
         "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/147.0.0.0 Safari/537.36",
         "Accept": "*/*",
-        "Referer": "https://streamable.com"
+        "Referer": "https://ln5.sync.com/"
     }
 
-    cookies = {
-        "OptanonConsent": "isGpcEnabled=0&datestamp=Fri+May+01+2026+08%3A53%3A11+GMT%2B0000+(Coordinated+Universal+Time)&version=202506.1.0&browserGpcFlag=0&isIABGlobal=false&hosts=&consentId=590b7acd-4659-4339-90cf-4f19745f6055&interactionCount=0&isAnonUser=1&landingPath=https%3A%2F%2Fstreamable.com%2Fri37ps&groups=C0001%3A1%2CC0003%3A1%2CC0002%3A0%2CC0004%3A0",
-        "session": "MOMXVE2X12K",
-    }
+    # cookies = {
+    #     "OptanonConsent": "isGpcEnabled=0&datestamp=Fri+May+01+2026+08%3A53%3A11+GMT%2B0000+(Coordinated+Universal+Time)&version=202506.1.0&browserGpcFlag=0&isIABGlobal=false&hosts=&consentId=590b7acd-4659-4339-90cf-4f19745f6055&interactionCount=0&isAnonUser=1&landingPath=https%3A%2F%2Fstreamable.com%2Fri37ps&groups=C0001%3A1%2CC0003%3A1%2CC0002%3A0%2CC0004%3A0",
+    #     "session": "MOMXVE2X12K",
+    # }
 
     # with open("div.html", "r", encoding="utf-8") as f:
     #     html_text = f.read()
 
-    pattern = r'<source[^>]+src="([^"]+)"'
+    # pattern = r'<source[^>]+src="([^"]+)"'
 
-    match = re.search(pattern, str(html_text))
+    # match = re.search(pattern, str(html_text))
 
 
-    download_url = html.unescape(match.group(1))
+    # download_url = html.unescape(match.group(1))
 
-    with httpx.stream("GET", download_url, headers=headers, cookies=cookies) as r:
-        r.raise_for_status()
+    # with httpx.stream("GET", download_url, headers=headers) as r:
+    #     r.raise_for_status()
 
-        total = int(r.headers.get("content-length", 0))
-        os.makedirs(DOWNLOAD_DIR, exist_ok=True)
-        video_path = os.path.join(DOWNLOAD_DIR, "video.mp4")
+    #     total = int(r.headers.get("content-length", 0))
+    #     os.makedirs(DOWNLOAD_DIR, exist_ok=True)
+    #     video_path = os.path.join(DOWNLOAD_DIR, "video.mp4")
 
-        with open(video_path, "wb") as f, tqdm(
-            total=total,
-            unit="B",
-            unit_scale=True,
-            unit_divisor=1024,
-            desc="Downloading",
-        ) as progress:
+    #     with open(video_path, "wb") as f, tqdm(
+    #         total=total,
+    #         unit="B",
+    #         unit_scale=True,
+    #         unit_divisor=1024,
+    #         desc="Downloading",
+    #     ) as progress:
 
-            for chunk in r.iter_bytes(chunk_size=1024 * 1024):  # 1MB chunks
-                f.write(chunk)
-                progress.update(len(chunk))
+    #         for chunk in r.iter_bytes(chunk_size=1024 * 1024):  # 1MB chunks
+    #             f.write(chunk)
+    #             progress.update(len(chunk))
 
-    parts = split_rar()
+    # parts = split_rar()
     # git_push_in_batches(parts, 10, 8)
-    drive(parts)
+    # drive(parts)
 
 
 if __name__ == "__main__":
