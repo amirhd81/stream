@@ -106,7 +106,7 @@ def drive(files, batch_size=10, delay=8):
 
 
 async def main(url, password):
-    matched_urls = set()
+    matched_urls = []
     logfile = open("network_log.txt", "w", encoding="utf-8")
 
     async with async_playwright() as p:
@@ -123,7 +123,7 @@ async def main(url, password):
                 timestamp = datetime.datetime.now().isoformat()
                 line = f"[{timestamp}] REQUEST: {request.method} {request.url}\n"
                 logfile.write(line)
-                matched_urls.add(request.url)
+                matched_urls.append(request.url)
             timestamp = datetime.datetime.now().isoformat()
             line = f"[{timestamp}] REQUEST: {request.method} {request.url}\n"
             logfile.write(line)
