@@ -106,6 +106,7 @@ def drive(files, batch_size=10, delay=8):
 
 
 async def main(url, password):
+    matched_urls = set()
     logfile = open("network_log.txt", "w", encoding="utf-8")
 
     async with async_playwright() as p:
@@ -122,7 +123,7 @@ async def main(url, password):
                 timestamp = datetime.datetime.now().isoformat()
                 line = f"[{timestamp}] REQUEST: {request.method} {request.url}\n"
                 logfile.write(line)
-                print("MATCHED URL:", request.url)
+                matched_urls.add(request.url)
             timestamp = datetime.datetime.now().isoformat()
             line = f"[{timestamp}] REQUEST: {request.method} {request.url}\n"
             logfile.write(line)
@@ -140,6 +141,8 @@ async def main(url, password):
 
         await page.screenshot(path="page.png", full_page=True)
 
+        if len(matched_urls) > 0:
+            print(matched_urls[0])
     
         co = await page.content()
         
