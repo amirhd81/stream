@@ -194,9 +194,9 @@ async def main(url, password):
                 f.write(chunk)
                 progress.update(len(chunk))
 
-    # parts = split_rar()
+    parts = split_rar()
     # git_push_in_batches(parts, 10, 8)
-    # drive(parts)
+    drive(parts)
 
 
 if __name__ == "__main__":
