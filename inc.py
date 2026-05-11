@@ -131,70 +131,17 @@ async def main(url, password):
         page.on("request", lambda req: asyncio.create_task(log_request(req)))
         page.on("response", lambda res: asyncio.create_task(log_response(res)))
 
-        # await page.fill('form[name="video-password"] input[name="password"]', password)
-        # await page.click('button[type="submit"]')
-
-        # print(True, "button clicked")
-
-        # await page.wait_for_timeout(5000)
-        # await page.evaluate("""
-        # () => {
-        #   const el = document.querySelector('.svp-controls');
-        #   if (el) {
-        #     el.style.setProperty('opacity', '1', 'important');
-        #     el.style.setProperty('visibility', 'visible', 'important');
-        #     el.style.setProperty('pointer-events', 'auto', 'important');
-        #   }
-        # }
-        # """)
-
         await page.wait_for_timeout(5000)
 
-        # html_text = await page.inner_html("div.svp-desktop-player")
         await page.screenshot(path="page.png", full_page=True)
 
-        # # print('before hover')
-        # # await page.hover("div.svp-events-catcher")
-        # # await page.wait_for_timeout(5000)
-        # # print('after hover')
-
+    
         co = await page.content()
         
         with open("div.html", "w") as f:
             f.write(str(co))
-            
 
-        # # Click the Options button by aria-label
-        # print('before click')
-        # await page.wait_for_selector("button.svp-button.svp-button-options[aria-label='Options (o)']", state="visible")
-        # await page.click("button.svp-button.svp-button-options[aria-label='Options (o)']")
-        # print('after click')
-
-        # # Wait for the options popup to appear
-        # print('before visibility')
-        # await page.wait_for_selector("div.svp-options", state="visible")
-        # print('after visibility')
-    
-        # # Click on the active options page inside the visible svp-options container
-        # # ensuring we ignore the ones that are not displayed
-        # print('before click')
-        # await page.click(
-        #     "div.svp-options:not([style*='display: none']) div.svp-options-page.svp-options-page--active"
-        # )
-        # print('after click')
-
-        # # Wait for the next popup to appear before clicking option item
-        # print('before visibility')
-        # await page.wait_for_selector("div.svp-options-item[data='360']", state="visible")
-        # print('after visibility')
-
-        # # Click the desired options item (e.g., "360")
-        # print('before click')
-        # await page.click("div.svp-options-item[data='360']")
-        # print('after click')
-
-
-        # log_file.close()
+        log_file.close()
         await browser.close()
 
     headers = {
