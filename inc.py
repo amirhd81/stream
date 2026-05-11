@@ -148,6 +148,8 @@ async def main(url, password):
         # }
         # """)
 
+        await page.wait_for_timeout(5000)
+
         # html_text = await page.inner_html("div.svp-desktop-player")
         await page.screenshot(path="page.png", full_page=True)
 
