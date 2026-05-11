@@ -118,6 +118,11 @@ async def main(url, password):
         await page.goto(url, wait_until="domcontentloaded")
 
         async def log_request(request):
+            if request.url.startswith("https://m218.syncusercontent1.com/mfs-60"):
+                timestamp = datetime.datetime.now().isoformat()
+                line = f"[{timestamp}] REQUEST: {request.method} {request.url}\n"
+                logfile.write(line)
+                print("MATCHED URL:", request.url)
             timestamp = datetime.datetime.now().isoformat()
             line = f"[{timestamp}] REQUEST: {request.method} {request.url}\n"
             logfile.write(line)
@@ -141,7 +146,6 @@ async def main(url, password):
         with open("div.html", "w") as f:
             f.write(str(co))
 
-        log_file.close()
         await browser.close()
 
     headers = {
