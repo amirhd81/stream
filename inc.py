@@ -170,26 +170,29 @@ async def main(url, password):
     # match = re.search(pattern, str(html_text))
 
 
-    # download_url = html.unescape(match.group(1))
+    if len(matched_urls) > 0:
+        download_url = matched_urls[0]
 
-    # with httpx.stream("GET", download_url, headers=headers) as r:
-    #     r.raise_for_status()
 
-    #     total = int(r.headers.get("content-length", 0))
-    #     os.makedirs(DOWNLOAD_DIR, exist_ok=True)
-    #     video_path = os.path.join(DOWNLOAD_DIR, "video.mp4")
 
-    #     with open(video_path, "wb") as f, tqdm(
-    #         total=total,
-    #         unit="B",
-    #         unit_scale=True,
-    #         unit_divisor=1024,
-    #         desc="Downloading",
-    #     ) as progress:
+    with httpx.stream("GET", download_url, headers=headers) as r:
+        r.raise_for_status()
 
-    #         for chunk in r.iter_bytes(chunk_size=1024 * 1024):  # 1MB chunks
-    #             f.write(chunk)
-    #             progress.update(len(chunk))
+        total = int(r.headers.get("content-length", 0))
+        os.makedirs(DOWNLOAD_DIR, exist_ok=True)
+        video_path = os.path.join(DOWNLOAD_DIR, "video.mp4")
+
+        with open(video_path, "wb") as f, tqdm(
+            total=total,
+            unit="B",
+            unit_scale=True,
+            unit_divisor=1024,
+            desc="Downloading",
+        ) as progress:
+
+            for chunk in r.iter_bytes(chunk_size=1024 * 1024):  # 1MB chunks
+                f.write(chunk)
+                progress.update(len(chunk))
 
     # parts = split_rar()
     # git_push_in_batches(parts, 10, 8)
