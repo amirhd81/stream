@@ -31,10 +31,10 @@ def download_video(url, height):
 
     format_str = f"bestvideo[height<={height}]+bestaudio/best[height<={height}]"
 
-    # run(f"wget https://s23.trafficdeposit.com/widi/81w6f9pzd1x5601zd2h5l4gzi1l0k2q/AlrmB7uNZ-yTrqZaev6kjQ/1778290678/633879013a27d/634f17bde2fd2.vid")
+    run(f"wget {url}")
 
     # run(f"yt-dlp -4 --add-header 'Referer: https://www.patreon.com/' --downloader [m3u8]aria2c --downloader-args aria2c:-x:16:-k:1M:-4  -o '{os.path.join(DOWNLOAD_DIR, "video.%(ext)s")}' {url}")
-    run(f"yt-dlp -4 -N 8 --concurrent-fragments 8 --downloader [m3u8]aria2c --downloader-args aria2c:-x:16:-k:1M:-4 -f 480p -o '{os.path.join(DOWNLOAD_DIR, "video.%(ext)s")}' '{url}'")
+    # run(f"yt-dlp -4 -N 8 --concurrent-fragments 8 --downloader [m3u8]aria2c --downloader-args aria2c:-x:16:-k:1M:-4 -f 480p -o '{os.path.join(DOWNLOAD_DIR, "video.%(ext)s")}' '{url}'")
 
 
 def split_rar():
