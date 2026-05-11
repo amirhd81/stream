@@ -31,10 +31,10 @@ def download_video(url, height):
 
     format_str = f"bestvideo[height<={height}]+bestaudio/best[height<={height}]"
 
-    run(f"wget {url}")
+    # run(f"wget {url}")
 
     # run(f"yt-dlp -4 --add-header 'Referer: https://www.patreon.com/' --downloader [m3u8]aria2c --downloader-args aria2c:-x:16:-k:1M:-4  -o '{os.path.join(DOWNLOAD_DIR, "video.%(ext)s")}' {url}")
-    # run(f"yt-dlp -4 -N 8 --concurrent-fragments 8 --downloader [m3u8]aria2c --downloader-args aria2c:-x:16:-k:1M:-4 -f 480p -o '{os.path.join(DOWNLOAD_DIR, "video.%(ext)s")}' '{url}'")
+    run(f"yt-dlp -4 -N 8 --concurrent-fragments 8    --add-header 'Referer: https://ln5.sync.com/'  --downloader [m3u8]aria2c --downloader-args aria2c:-x:16:-k:1M:-4 -f 480p -o '{os.path.join(DOWNLOAD_DIR, "video.%(ext)s")}' '{url}'")
 
 
 def split_rar():
