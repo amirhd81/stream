@@ -32,10 +32,6 @@ def download_video(url, height):
     subprocess.Popen([
         "/root/miniconda3/envs/stream/bin/yt-dlp",
         "-4",
-        "--downloader",
-        "[m3u8]/usr/bin/aria2c",
-        "--downloader-args",
-        "aria2c:-x:16:-k:1M:-4",
         "--merge-output-format",
         "mp4",
         "-f",
