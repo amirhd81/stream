@@ -29,11 +29,11 @@ def download_video(url, height):
     print(f"📥 Starting download at {height}p...")
     format_str = f"bestvideo[height<={height}]+bestaudio/best[height<={height}]"
 
-    output_path = os.path.join(DOWNLOAD_DIR, "video.%(ext)s")
+    output_path = os.path.join('download', "video.%(ext)s")
 
     print("output:", output_path, flush=True)
 
-    os.makedirs(DOWNLOAD_DIR, exist_ok=True)
+    os.makedirs("download", exist_ok=True)
 
     subprocess.Popen([
         "/root/miniconda3/envs/stream/bin/yt-dlp",
