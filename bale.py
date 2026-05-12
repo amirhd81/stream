@@ -1,6 +1,5 @@
 from fastapi import FastAPI, Request
 import subprocess
-import shlex
 import requests
 
 app = FastAPI()
@@ -20,7 +19,9 @@ def send_message(chat_id, text):
 
 def download(text, chat_id):
     try:
-        parts = shlex.split(text)
+        parts = text.split()
+
+        print(parts)
 
         command = parts[0]
 
