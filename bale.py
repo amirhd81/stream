@@ -21,8 +21,6 @@ def download(text, chat_id):
     try:
         parts = text.split()
 
-        print(parts)
-
         command = parts[0]
 
         # ----------------------------------------
@@ -140,6 +138,8 @@ def download(text, chat_id):
                 capture_output=True,
                 text=True
             )
+
+            print(url, quality,  f"{BASE_DIR}/dl.py")
 
             return {
                 "ok": True,
