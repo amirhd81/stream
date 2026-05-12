@@ -29,6 +29,8 @@ def download_video(url, height):
     print(f"📥 Starting download at {height}p...")
     format_str = f"bestvideo[height<={height}]+bestaudio/best[height<={height}]"
 
+    os.makedirs("download", exist_ok=True)
+
     output_path = os.path.join('download', "video.%(ext)s")
 
     print("output:", output_path, flush=True)
