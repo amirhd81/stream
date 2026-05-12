@@ -1,12 +1,19 @@
-import requests
+from fastapi import FastAPI, Request
+import json
 
-url = "https://tapi.bale.ai/751585554:XalUAe8C-fm5rgcUfvzPoezfILcSC7s5vSA/getWebhookInfo"
-data = {
-    "url": "https://www.avalin48.ir/webhook/streamable",
-}
+app = FastAPI()
 
-response = requests.get(url)
 
-print(response)
-print("Status code:", response.status_code)
-print("Response body:", response.text)
+@app.post("/webhook/streamable")
+async def telegram_webhook(request: Request):
+    update = await request.json()
+
+    pretty = json.dumps(update, indent=2, ensure_ascii=False)
+
+    print(pretty)
+
+    return {
+        "ok": True,
+        "pretty_update": pretty,
+        "raw_update": update
+    }
