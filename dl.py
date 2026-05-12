@@ -41,7 +41,7 @@ def download_video(url, height):
     format_str = f"bestvideo[height<={height}]+bestaudio/best[height<={height}]"
 
     # run(f"yt-dlp -4 --downloader [m3u8]aria2c --downloader-args aria2c:-x:16:-k:1M:-4   --merge-output-format 'mp4' -o '{os.path.join(DOWNLOAD_DIR, "video.%(ext)s")}' {url}")
-    run(f"yt-dlp -4 --downloader [m3u8]aria2c --downloader-args aria2c:-x:16:-k:1M:-4   --merge-output-format 'mp4' -f '{format_str}' -o '{os.path.join(DOWNLOAD_DIR, "video.%(ext)s")}' {url}")
+    run(f"yt-dlp -4 --downloader [m3u8]aria2c --downloader-args aria2c:-x:16:-k:1M:-4   --merge-output-format 'mp4' -f '{format_str}' -o '{os.path.join(DOWNLOAD_DIR, "video.%(ext)s")}' '{url}'")
 
     # opts = {
     #     "format": format_str,
