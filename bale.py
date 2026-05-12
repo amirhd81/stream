@@ -128,18 +128,9 @@ def download(text, chat_id):
 
             quality = parts[2]
 
-            subprocess.Popen(
-                [
-                    PYTHON_BIN,
-                    f"{BASE_DIR}/dl.py",
-                    url,
-                    quality
-                ],
-                capture_output=True,
-                text=True
-            )
-
             print(url, quality,  f"{BASE_DIR}/dl.py")
+
+            subprocess.run([PYTHON_BIN, f"{BASE_DIR}/dl.py", url, quality])
 
             return {
                 "ok": True,
