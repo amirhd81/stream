@@ -1,22 +1,122 @@
 from fastapi import FastAPI, Request
 import subprocess
-import json
 import shlex
+import requests
 
 app = FastAPI()
 
 PYTHON_BIN = "/root/miniconda3/envs/stream/bin/python"
 BASE_DIR = "/root/strem"
 
-def download(text):
+
+def send_message(chat_id, text):
+    requests.post(
+        "https://tapi.bale.ai/751585554:XalUAe8C-fm5rgcUfvzPoezfILcSC7s5vSA/sendMessage",
+        json={
+            "chat_id": chat_id,
+            "text": text
+        }
+    )
+
+def download(text, chat_id):
     try:
         parts = shlex.split(text)
 
         command = parts[0]
 
+        # ----------------------------------------
+        # /search
+        # ----------------------------------------
+
+        if command == "/search":
+
+            if len(parts) < 3:
+                send_message(chat_id, "Invalid search command")
+                return {"ok": False}
+
+            search_type = parts[1]
+
+            # ------------------------------------
+            # global search
+            # ------------------------------------
+
+            if search_type == "global":
+
+                query = " ".join(parts[2:])
+
+                result = subprocess.run(
+                    [
+                        PYTHON_BIN,
+                        "ytSearch.py",
+                        "global",
+                        query
+                    ],
+                    capture_output=True,
+                    text=True
+                )
+
+                send_message(chat_id, result.stdout[:4000])
+
+            # ------------------------------------
+            # uploads
+            # ------------------------------------
+
+            elif search_type == "uploads":
+
+                if len(parts) < 3:
+                    send_message(chat_id, "Usage: /search uploads <channel_url>")
+                    return {"ok": False}
+                
+
+                channel_url = f"https://www.youtube.com/@{parts[2]}"
+
+                result = subprocess.run(
+                    [
+                        PYTHON_BIN,
+                        "ytSearch.py",
+                        "uploads",
+                        channel_url
+                    ],
+                    capture_output=True,
+                    text=True
+                )
+
+                send_message(chat_id, result.stdout[:4000])
+
+            # ------------------------------------
+            # channel search
+            # ------------------------------------
+
+            elif search_type == "channel":
+
+                if len(parts) < 4:
+                    send_message(chat_id, "Usage: /search channel <channel_url> <query>")
+                    return {"ok": False}
+
+                channel_url = f"https://www.youtube.com/@{parts[2]}"
+                query = " ".join(parts[3:])
+
+                result = subprocess.run(
+                    [
+                        PYTHON_BIN,
+                        "ytSearch.py",
+                        "channel",
+                        channel_url,
+                        query
+                    ],
+                    capture_output=True,
+                    text=True
+                )
+
+                send_message(chat_id, result.stdout[:4000])
+
+            else:
+                send_message(chat_id, "Unknown search type")
+
         # -----------------------------
         # /yt URL QUALITY
         # -----------------------------
+        
         if command == "/yt":
 
             if len(parts) != 3:
@@ -24,16 +124,21 @@ def download(text):
                     "ok": False,
                     "usage": "/yt <url> <360|480|720>"
                 }
-
+            
             url = parts[1]
+
             quality = parts[2]
 
-            subprocess.Popen([
-                PYTHON_BIN,
-                f"{BASE_DIR}/dl.py",
-                url,
-                quality
-            ])
+            subprocess.Popen(
+                [
+                    PYTHON_BIN,
+                    f"{BASE_DIR}/dl.py",
+                    url,
+                    quality
+                ],
+                capture_output=True,
+                text=True
+            )
 
             return {
                 "ok": True,
@@ -41,10 +146,10 @@ def download(text):
                 "url": url,
                 "quality": quality
             }
-
         # -----------------------------
         # /stream URL PASSWORD
         # -----------------------------
+
         elif command == "/stream":
 
             if len(parts) != 3:
@@ -52,26 +157,30 @@ def download(text):
                     "ok": False,
                     "usage": "/stream <url> <password>"
                 }
-
             url = parts[1]
+
             password = parts[2]
 
-            subprocess.Popen([
-                PYTHON_BIN,
-                f"{BASE_DIR}/get.py",
-                url,
-                password
-            ])
+            subprocess.Popen(
+                [
+                    PYTHON_BIN,
+                    f"{BASE_DIR}/get.py",
+                    url,
+                    password
+                ], 
+                capture_output=True,
+                text=True
+            )
 
             return {
                 "ok": True,
                 "action": "streamable",
                 "url": url
             }
-
         # -----------------------------
         # /inc URL
         # -----------------------------
+
         elif command == "/inc":
 
             if len(parts) != 2:
@@ -79,21 +188,25 @@ def download(text):
                     "ok": False,
                     "usage": "/inc <url>"
                 }
-
+            
             url = parts[1]
 
-            subprocess.Popen([
-                PYTHON_BIN,
-                f"{BASE_DIR}/inc.py",
-                url
-            ])
-
+            subprocess.Popen(
+                [
+                    PYTHON_BIN,
+                    f"{BASE_DIR}/inc.py",
+                    url
+                ], 
+                capture_output=True,
+                text=True
+            )
+            
             return {
                 "ok": True,
                 "action": "inc",
                 "url": url
             }
-
+        
         else:
             return {
                 "ok": False,
@@ -114,6 +227,7 @@ async def telegram_webhook(request: Request):
 
     message = update.get("message", {})
     text = message.get("text", "").strip()
+    chat_id = message.get("chat", {}).get("id")
 
     if not text:
         return {
@@ -121,4 +235,4 @@ async def telegram_webhook(request: Request):
             "error": "No text found"
         }
 
-    download(text)
+    download(text, chat_id)
