@@ -32,10 +32,6 @@ def download_video(url, height):
     subprocess.Popen([
         "/root/miniconda3/envs/stream/bin/yt-dlp",
         "-4",
-        "--merge-output-format",
-        "mp4",
-        "-f",
-        format_str,
         "-o",
         os.path.join(DOWNLOAD_DIR, "video.%(ext)s"),
         url
