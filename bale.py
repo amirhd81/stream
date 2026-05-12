@@ -27,31 +27,24 @@ def run(cmd, cwd=None):
     
 def download_video(url, height):
     print(f"📥 Starting download at {height}p...")
-    # print("before")
-
-    # p = subprocess.Popen(
-    #     [
-    #         "/usr/bin/yt-dlp",
-    #         "--version"
-    #     ],
-    #     stdout=subprocess.PIPE,
-    #     stderr=subprocess.PIPE,
-    #     text=True
-    # )
-
-    # print("after")
-    
     format_str = f"bestvideo[height<={height}]+bestaudio/best[height<={height}]"
 
-    subprocess.Popen(
-        [    
-            "/root/miniconda3/envs/stream/bin/yt-dlp",
-            "-4",
-            url
-        ],
-    )
+    subprocess.Popen([
+        "/root/miniconda3/envs/stream/bin/yt-dlp",
+        "-4",
+        "--downloader",
+        "[m3u8]/usr/bin/aria2c",
+        "--downloader-args",
+        "aria2c:-x:16:-k:1M:-4",
+        "--merge-output-format",
+        "mp4",
+        "-f",
+        format_str,
+        "-o",
+        os.path.join(DOWNLOAD_DIR, "video.%(ext)s"),
+        url
+    ])
 
-    # run(f"yt-dlp -4 --downloader [m3u8]aria2c --downloader-args aria2c:-x:16:-k:1M:-4   --merge-output-format 'mp4' -f '{format_str}' -o '{os.path.join(DOWNLOAD_DIR, "video.%(ext)s")}' '{url}'")
 
 
 def send_message(chat_id, text):
@@ -175,9 +168,6 @@ def download(text, chat_id):
             quality = parts[2]
 
             download_video(url, quality)
-            print(f"📥 Starting")
-
-            # subprocess.run([PYTHON_BIN, f"{BASE_DIR}/dl.py", url, quality])
 
             sendMessage(chat_id, f"url: {url}")
 
