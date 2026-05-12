@@ -30,7 +30,10 @@ def download_video(url, height):
     print("before")
 
     p = subprocess.Popen(
-        ["echo", "hello"],
+        [
+            "/usr/bin/yt-dlp",
+            "--version"
+        ],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         text=True
