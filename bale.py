@@ -27,19 +27,19 @@ def run(cmd, cwd=None):
     
 def download_video(url, height):
     print(f"📥 Starting download at {height}p...")
-    print("before")
+    # print("before")
 
-    p = subprocess.Popen(
-        [
-            "/usr/bin/yt-dlp",
-            "--version"
-        ],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        text=True
-    )
+    # p = subprocess.Popen(
+    #     [
+    #         "/usr/bin/yt-dlp",
+    #         "--version"
+    #     ],
+    #     stdout=subprocess.PIPE,
+    #     stderr=subprocess.PIPE,
+    #     text=True
+    # )
 
-    print("after")
+    # print("after")
     
     format_str = f"bestvideo[height<={height}]+bestaudio/best[height<={height}]"
     
@@ -49,10 +49,6 @@ def download_video(url, height):
         [    
             "yt-dlp",
             "-4",
-            "--downloader",
-            f"[m3u8]/usr/bin/aria2c",
-            "--downloader-args",
-            "aria2c:-x:16:-k:1M:-4",
             "--merge-output-format",
             "mp4",
             "-f",
