@@ -8,9 +8,23 @@ PYTHON_BIN = "/root/miniconda3/envs/stream/bin/python"
 BASE_DIR = "/root/strem"
 
 def run(cmd, cwd=None):
-    """Run a shell command safely."""
-    subprocess.run(cmd, shell=True, check=True, cwd=cwd)
+    result = subprocess.run(
+        cmd,
+        shell=True,
+        cwd=cwd,
+        text=True,
+        capture_output=True
+    )
 
+    print("RETURN CODE:", result.returncode)
+    print("STDOUT:")
+    print(result.stdout)
+
+    print("STDERR:")
+    print(result.stderr)
+
+    result.check_returncode()
+    
 def download_video(url, height):
     print(f"📥 Starting download at {height}p...")
     format_str = f"bestvideo[height<={height}]+bestaudio/best[height<={height}]"
