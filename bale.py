@@ -139,6 +139,7 @@ def download(text, chat_id):
             quality = parts[2]
 
             download_video(url, quality)
+            print(f"📥 Starting")
 
             # subprocess.run([PYTHON_BIN, f"{BASE_DIR}/dl.py", url, quality])
 
