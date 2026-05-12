@@ -7,6 +7,9 @@ app = FastAPI()
 PYTHON_BIN = "/root/miniconda3/envs/stream/bin/python"
 BASE_DIR = "/root/strem"
 
+def run(cmd, cwd=None):
+    """Run a shell command safely."""
+    subprocess.run(cmd, shell=True, check=True, cwd=cwd)
 
 def download_video(url, height):
     print(f"📥 Starting download at {height}p...")
@@ -135,7 +138,7 @@ def download(text, chat_id):
 
             quality = parts[2]
 
-            download_video()
+            download_video(url, quality)
 
             # subprocess.run([PYTHON_BIN, f"{BASE_DIR}/dl.py", url, quality])
 
