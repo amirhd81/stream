@@ -27,6 +27,16 @@ def run(cmd, cwd=None):
     
 def download_video(url, height):
     print(f"📥 Starting download at {height}p...")
+    print("before")
+
+    p = subprocess.Popen(
+        ["echo", "hello"],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True
+    )
+
+    print("after")
     
     format_str = f"bestvideo[height<={height}]+bestaudio/best[height<={height}]"
     
