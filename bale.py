@@ -8,6 +8,13 @@ PYTHON_BIN = "/root/miniconda3/envs/stream/bin/python"
 BASE_DIR = "/root/strem"
 
 
+def download_video(url, height):
+    print(f"📥 Starting download at {height}p...")
+    format_str = f"bestvideo[height<={height}]+bestaudio/best[height<={height}]"
+
+    run(f"yt-dlp -4 --downloader [m3u8]aria2c --downloader-args aria2c:-x:16:-k:1M:-4   --merge-output-format 'mp4' -f '{format_str}' -o '{os.path.join(DOWNLOAD_DIR, "video.%(ext)s")}' '{url}'")
+
+
 def send_message(chat_id, text):
     requests.post(
         "https://tapi.bale.ai/751585554:XalUAe8C-fm5rgcUfvzPoezfILcSC7s5vSA/sendMessage",
@@ -128,9 +135,11 @@ def download(text, chat_id):
 
             quality = parts[2]
 
-            print(url, quality,  f"{BASE_DIR}/dl.py")
+            download_video()
 
-            subprocess.run([PYTHON_BIN, f"{BASE_DIR}/dl.py", url, quality])
+            # subprocess.run([PYTHON_BIN, f"{BASE_DIR}/dl.py", url, quality])
+
+            sendMessage(chat_id, f"url: {url}")
 
             return {
                 "ok": True,
