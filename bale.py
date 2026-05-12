@@ -42,23 +42,13 @@ def download_video(url, height):
     # print("after")
     
     format_str = f"bestvideo[height<={height}]+bestaudio/best[height<={height}]"
-    
-    log = open("/root/strem/yt.log", "a")
 
     subprocess.Popen(
         [    
-            "yt-dlp",
+            "/root/miniconda3/envs/stream/bin/yt-dlp",
             "-4",
-            "--merge-output-format",
-            "mp4",
-            "-f",
-            format_str,
-            "-o",
-            os.path.join(DOWNLOAD_DIR, "video.%(ext)s"),
             url
         ],
-        stdout=log,
-        stderr=log
     )
 
     # run(f"yt-dlp -4 --downloader [m3u8]aria2c --downloader-args aria2c:-x:16:-k:1M:-4   --merge-output-format 'mp4' -f '{format_str}' -o '{os.path.join(DOWNLOAD_DIR, "video.%(ext)s")}' '{url}'")
