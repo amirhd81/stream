@@ -215,6 +215,7 @@ def download(text, chat_id):
             }
 
     except Exception as e:
+        send_message(str(e), chat_id)
         return {
             "ok": False,
             "error": str(e)
