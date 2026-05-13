@@ -61,13 +61,11 @@ def send_message1(chat_id, text):
             "https://tapi.bale.ai/751585554:XalUAe8C-fm5rgcUfvzPoezfILcSC7s5vSA/sendMessage",
             json={
                 "chat_id": chat_id,
-                "text": text,
                 "reply_markup": {
                     "keyboard": [
                         [
                             {
                                 "text": "Youtube",
-                                "callback_data": "/yt"
                             }
                         ]
                     ]
