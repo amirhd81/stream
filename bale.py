@@ -61,6 +61,17 @@ def cleanup(chat_id):
         ])
     
     send_message1(chat_id, "All files deleted successfully.")
+
+def cleanup_trash(chat_id):
+    run([
+            "rclone",
+            "--bind",
+            "0.0.0.0",
+            "cleanup",
+            "gdrive:"
+        ])
+    
+    send_message1(chat_id, "All files deleted successfully in trash.")
     
 
 def drive(files, chat_id):
@@ -371,6 +382,16 @@ def download(text, chat_id):
                 "ok": True,
                 "action": "inc",
                 "url": url
+            }
+            
+        elif command == "/clean":
+            cleanup(chat_id)
+
+            cleanup_trash(chat_id)
+            
+            return {
+                "ok": True,
+                "action": "clean",
             }
         
         else:
