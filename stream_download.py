@@ -62,6 +62,7 @@ async def download_streamable(chat_id, url, password):
         await page.click('button[type="submit"]')
         await page.wait_for_timeout(5000)
         send_message1(chat_id, "button clicked")
+        
         await page.evaluate("""
         () => {
           const el = document.querySelector('.svp-controls');
@@ -72,8 +73,10 @@ async def download_streamable(chat_id, url, password):
           }
         }
         """)
+
         html_text = await page.inner_html("div.svp-desktop-player")
         await page.screenshot(path="page.png", full_page=True)
+        
         await browser.close()
 
     headers = {
