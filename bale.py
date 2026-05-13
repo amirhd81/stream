@@ -35,6 +35,36 @@ def drive(files, batch_size=10, delay=8):
 
     
     print("✅ All batches uploaded successfully.")
+
+
+def split_rar():
+    """Split the downloaded video into RAR parts."""
+    print(f"📦 Splitting into {SPLIT_SIZE} parts...")
+
+    video_path = os.path.join(DOWNLOAD_DIR, "video.mp4")
+    if not os.path.exists(video_path):
+        # Fallback in case the extension wasn't mp4 despite merge_output_format
+        files = [f for f in os.listdir(DOWNLOAD_DIR) if f.startswith("video.")]
+        if not files:
+            print("Error: Downloaded video file not found.")
+            sys.exit(1)
+        video_path = os.path.join(DOWNLOAD_DIR, files[0])
+
+    # Create split archive inside the download folder
+    # Note: Using {os.path.basename(video_path)} ensures we target the right file
+    target_file = os.path.basename(video_path)
+    run(f"rar a -v{SPLIT_SIZE} -m0 {ARCHIVE_NAME}.rar \"{target_file}\"", cwd=DOWNLOAD_DIR)
+
+    # Collect created archive parts
+    parts = sorted(
+        f for f in os.listdir(DOWNLOAD_DIR)
+        if f.startswith(ARCHIVE_NAME) and f.endswith(".rar") or ".r" in f
+    )
+
+    # Remove original video after archiving
+    os.remove(video_path)
+
+    return parts
     
 def download_video(url, height):
     print(f"📥 Starting download at {height}p...")
