@@ -373,7 +373,7 @@ def download(text, chat_id):
             subprocess.run([
                 PYTHON_BIN,
                 "/root/strem/stream_download.py",
-                chat_id,
+                str(chat_id),
                 url,
                 password
             ], shell=True)
