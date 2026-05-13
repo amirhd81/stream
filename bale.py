@@ -100,7 +100,7 @@ def download(text, chat_id):
 
         if command == "/start":
             print(chat_id)
-            sendMessage1(chat_id, "Hello")
+            send_message1(chat_id, "Hello")
             print(chat_id)
 
         # ----------------------------------------
