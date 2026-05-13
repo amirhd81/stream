@@ -1,3 +1,9 @@
+from fastapi import FastAPI, Request
+import subprocess
+import requests
+import os
+import traceback
+
 async def download_streamable(chat_id, url, password):
     logfile = open("network_log.txt", "w", encoding="utf-8")
 
