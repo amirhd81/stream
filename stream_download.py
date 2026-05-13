@@ -10,6 +10,20 @@ import datetime
 from tqdm import tqdm
 import time
 
+def send_message1(chat_id, text):
+    try:
+        r = requests.post(
+            "https://tapi.bale.ai/751585554:XalUAe8C-fm5rgcUfvzPoezfILcSC7s5vSA/sendMessage",
+            json={
+                "chat_id": chat_id,
+                "text": text
+            },
+            timeout=30
+        )
+
+    except Exception:
+        traceback.print_exc()
+
 async def download_streamable(chat_id, url, password):
     logfile = open("network_log.txt", "w", encoding="utf-8")
 
