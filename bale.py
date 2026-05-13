@@ -26,6 +26,15 @@ def run(cmd, cwd=None):
     print(result.stderr)
 
     result.check_returncode()
+
+def drive(files, batch_size=10, delay=8):
+    print("📤 Starting batch upload to GitHub...")
+
+    for f in files:
+        run(f"rclone --bind 0.0.0.0 copy -P \"{f}\" gdrive:/vps", cwd=DOWNLOAD_DIR)
+
+    
+    print("✅ All batches uploaded successfully.")
     
 def download_video(url, height):
     print(f"📥 Starting download at {height}p...")
