@@ -372,7 +372,7 @@ async def download(text, chat_id):
 
             print(chat_id, url, password)
 
-            subprocess.Popenn([
+            subprocess.run([
                 PYTHON_BIN,
                 f"{BASE_DIR}/stream_download.py",
                 chat_id,
