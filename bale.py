@@ -29,15 +29,6 @@ def send_message1(chat_id, text):
             json={
                 "chat_id": chat_id,
                 "text": text
-                # "reply_markup": {
-                #     "keyboard": [
-                #         [
-                #             {
-                #                 "text": "Youtube",
-                #             }
-                #         ]
-                #     ]
-                # }
             },
             timeout=30
         )
@@ -59,6 +50,18 @@ def run(cmd, cwd=None):
     print(result.stderr)
 
     result.check_returncode()
+
+def cleanup(chat_id):
+    run([
+            "rclone",
+            "--bind",
+            "0.0.0.0",
+            "delete",
+            "gdrive:/vps"
+        ])
+    
+    send_message1(chat_id, "All files deleted successfully.")
+    
 
 def drive(files, chat_id):
     send_message1(chat_id, "Starting upload to drive")
