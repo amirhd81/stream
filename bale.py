@@ -54,6 +54,7 @@ def download_video(url, height):
     ])
 
 def send_message1(chat_id, text):
+    print("ENTERED SEND_MESSAGE", flush=True)
 
     try:
         r = requests.post(
