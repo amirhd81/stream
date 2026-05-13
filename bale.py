@@ -55,13 +55,22 @@ def download_video(url, height):
 
 
 def send_message(chat_id, text):
-    requests.post(
-        "https://tapi.bale.ai/751585554:XalUAe8C-fm5rgcUfvzPoezfILcSC7s5vSA/sendMessage",
-        json={
-            "chat_id": chat_id,
-            "text": text
+    try:
+        requests.post(
+            "https://tapi.bale.ai/751585554:XalUAe8C-fm5rgcUfvzPoezfILcSC7s5vSA/sendMessage",
+            json={
+                "chat_id": chat_id,
+                "text": text
+            }
+        )
+
+     except Exception as e:
+        print(str(e))
+        return {
+            "ok": False,
+            "error": str(e)
         }
-    )
+        
 
 def download(text, chat_id):
     try:
