@@ -370,13 +370,13 @@ def download(text, chat_id):
 
             password = parts[2]
 
-            subprocess.run([
+            run([
                 PYTHON_BIN,
                 "/root/strem/stream_download.py",
                 str(chat_id),
                 url,
                 password
-            ], shell=True)
+            ])
 
             parts = split_rar(chat_id)
 
