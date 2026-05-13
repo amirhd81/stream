@@ -8,14 +8,37 @@ app = FastAPI()
 
 PYTHON_BIN = "/root/miniconda3/envs/stream/bin/python"
 BASE_DIR = "/root/strem"
+DOWNLOAD_DIR = "download"
+SPLIT_SIZE = "90m"
+ARCHIVE_NAME = "video_archive"
+
+def send_message1(chat_id, text):
+    try:
+        r = requests.post(
+            "https://tapi.bale.ai/751585554:XalUAe8C-fm5rgcUfvzPoezfILcSC7s5vSA/sendMessage",
+            json={
+                "chat_id": chat_id,
+                "text": text
+                # "reply_markup": {
+                #     "keyboard": [
+                #         [
+                #             {
+                #                 "text": "Youtube",
+                #             }
+                #         ]
+                #     ]
+                # }
+            },
+            timeout=30
+        )
+
+    except Exception:
+        traceback.print_exc()
 
 def run(cmd, cwd=None):
     result = subprocess.run(
         cmd,
-        shell=True,
         cwd=cwd,
-        text=True,
-        capture_output=True
     )
 
     print("RETURN CODE:", result.returncode)
@@ -27,54 +50,66 @@ def run(cmd, cwd=None):
 
     result.check_returncode()
 
-def drive(files, batch_size=10, delay=8):
-    print("📤 Starting batch upload to GitHub...")
+def drive(files, chat_id):
+    send_message1(chat_id, "Starting upload to drive")
 
     for f in files:
-        run(f"rclone --bind 0.0.0.0 copy -P \"{f}\" gdrive:/vps", cwd=DOWNLOAD_DIR)
+        run([
+            "rclone",
+            "--bind 0.0.0.0",
+            "copy -P",
+            f,
+            "gdrive:/vps"
+        ], cwd=DOWNLOAD_DIR)
 
-    
-    print("✅ All batches uploaded successfully.")
+    send_message1(chat_id, "All files uploaded successfully.")
 
 
-def split_rar():
-    """Split the downloaded video into RAR parts."""
-    print(f"📦 Splitting into {SPLIT_SIZE} parts...")
+def split_rar(chat_id):
+    send_message1(chat_id, f"Splitting into {SPLIT_SIZE} parts...")
 
     video_path = os.path.join(DOWNLOAD_DIR, "video.mp4")
+    
     if not os.path.exists(video_path):
-        # Fallback in case the extension wasn't mp4 despite merge_output_format
+
         files = [f for f in os.listdir(DOWNLOAD_DIR) if f.startswith("video.")]
         if not files:
-            print("Error: Downloaded video file not found.")
+            send_message1(chat_id, "Error: Downloaded video file not found.")
             sys.exit(1)
         video_path = os.path.join(DOWNLOAD_DIR, files[0])
 
-    # Create split archive inside the download folder
-    # Note: Using {os.path.basename(video_path)} ensures we target the right file
     target_file = os.path.basename(video_path)
-    run(f"rar a -v{SPLIT_SIZE} -m0 {ARCHIVE_NAME}.rar \"{target_file}\"", cwd=DOWNLOAD_DIR)
 
-    # Collect created archive parts
+    size = f"-v{SPLIT_SIZE}"
+
+    rar_name = f"{ARCHIVE_NAME}.rar"
+
+    run([
+        "rar",
+        "a",
+        size,
+        "-m0",
+        rar_name,
+        target_file
+    ], cwd=DOWNLOAD_DIR)
+
     parts = sorted(
         f for f in os.listdir(DOWNLOAD_DIR)
         if f.startswith(ARCHIVE_NAME) and f.endswith(".rar") or ".r" in f
     )
 
-    # Remove original video after archiving
     os.remove(video_path)
 
     return parts
     
 def download_video(url, height):
-    print(f"📥 Starting download at {height}p...")
+    send_message1(chat_id, f"Starting download at {height}p...")
+    
     format_str = f"bestvideo[height<={height}]+bestaudio/best[height<={height}]"
 
-    output_path = os.path.join('download', "video.%(ext)s")
+    output_path = os.path.join(DOWNLOAD_DIR, "video.%(ext)s")
 
-    print("output:", output_path, flush=True)
-
-    os.makedirs("download", exist_ok=True)
+    os.makedirs(DOWNLOAD_DIR, exist_ok=True)
 
     subprocess.run([
         "/root/miniconda3/envs/stream/bin/yt-dlp",
@@ -91,35 +126,6 @@ def download_video(url, height):
         output_path,
         url
     ])
-
-def send_message1(chat_id, text):
-    print("ENTERED SEND_MESSAGE", flush=True)
-
-    try:
-        r = requests.post(
-            "https://tapi.bale.ai/751585554:XalUAe8C-fm5rgcUfvzPoezfILcSC7s5vSA/sendMessage",
-            json={
-                "chat_id": chat_id,
-                "text": text,
-                "reply_markup": {
-                    "keyboard": [
-                        [
-                            {
-                                "text": "Youtube",
-                            }
-                        ]
-                    ]
-                }
-            },
-            timeout=30
-        )
-
-        print("STATUS:", r.status_code, flush=True)
-        print("BODY:", r.text, flush=True)
-
-    except Exception:
-        print("SEND MESSAGE FAILED", flush=True)
-        traceback.print_exc()
 
 
 def send_message(chat_id, text):
@@ -258,7 +264,11 @@ def download(text, chat_id):
 
             download_video(url, quality)
 
-            sendMessage(chat_id, f"url: {url}")
+            parts = split_rar(chat_id)
+
+            drive(parts, chat_id)
+        
+            sendMessage(chat_id, "Download success")
 
             return {
                 "ok": True,
@@ -266,6 +276,8 @@ def download(text, chat_id):
                 "url": url,
                 "quality": quality
             }
+
+        
         # -----------------------------
         # /stream URL PASSWORD
         # -----------------------------
