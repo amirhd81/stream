@@ -450,4 +450,4 @@ async def telegram_webhook(request: Request):
             "error": "No text found"
         }
 
-    download(text, chat_id)
+    await download(text, chat_id)
