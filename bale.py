@@ -370,7 +370,7 @@ async def download(text, chat_id):
 
             password = parts[2]
 
-            run([
+            subprocess.Popenn([
                 PYTHON_BIN,
                 f"{BASE_DIR}/stream_download.py",
                 chat_id,
