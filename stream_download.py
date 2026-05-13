@@ -12,6 +12,7 @@ import time
 import traceback
 
 CHROMIUM_PATH = "/usr/bin/chromium-browser"
+DOWNLOAD_DIR = "download"
 
 def send_message1(chat_id, text):
     try:
