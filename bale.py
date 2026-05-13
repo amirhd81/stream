@@ -2,6 +2,7 @@ from fastapi import FastAPI, Request
 import subprocess
 import requests
 import os
+import traceback
 
 app = FastAPI()
 
