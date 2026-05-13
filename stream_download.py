@@ -11,6 +11,8 @@ from tqdm import tqdm
 import time
 import traceback
 
+CHROMIUM_PATH = "/usr/bin/chromium-browser"
+
 def send_message1(chat_id, text):
     try:
         r = requests.post(
