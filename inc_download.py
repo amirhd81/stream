@@ -9,9 +9,25 @@ import html
 import datetime
 from tqdm import tqdm
 import time
+import traceback
+import requests
 
 DOWNLOAD_DIR = "download"
 CHROMIUM_PATH = "/usr/bin/chromium-browser"
+
+def send_message1(chat_id, text):
+    try:
+        r = requests.post(
+            "https://tapi.bale.ai/751585554:XalUAe8C-fm5rgcUfvzPoezfILcSC7s5vSA/sendMessage",
+            json={
+                "chat_id": int(chat_id),
+                "text": text
+            },
+            timeout=30
+        )
+
+    except Exception:
+        traceback.print_exc()
 
 def run(cmd, cwd=None):
     """Run a shell command safely."""
@@ -74,6 +90,7 @@ async def main(chat_id, url):
     if len(matched_urls) > 0:
         download_url = matched_urls[0]
 
+    send_message1(chat_id, "Starting download")
 
     with httpx.stream("GET", download_url, headers=headers) as r:
         r.raise_for_status()
