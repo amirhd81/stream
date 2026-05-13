@@ -79,3 +79,15 @@ async def download_streamable(chat_id, url, password):
             for chunk in r.iter_bytes(chunk_size=1024 * 1024):  # 1MB chunks
                 f.write(chunk)
                 progress.update(len(chunk))
+
+
+if __name__ == "__main__":
+    if len(sys.argv) < 4:
+        print("Usage: python streamable.py <url> <password>")
+        sys.exit(1)
+
+    chat_id = sys.argv[1]
+    target_url = sys.argv[2]
+    password = sys.argv[3]
+
+    asyncio.run(main(target_url, password))
