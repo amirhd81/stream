@@ -66,8 +66,10 @@ def drive(files, chat_id):
     for f in files:
         run([
             "rclone",
-            "--bind 0.0.0.0",
-            "copy -P",
+            "--bind",
+            "0.0.0.0",
+            "copy",
+            "-P"
             f,
             "gdrive:/vps"
         ], cwd=DOWNLOAD_DIR)
@@ -194,7 +196,7 @@ def download_patreon(chat_id, url):
         "/root/miniconda3/envs/stream/bin/yt-dlp",
         "-4",
         "--add-header",
-        "'Referer: https://www.patreon.com/'",
+        "Referer: https://www.patreon.com/",
         "--downloader",
         "[m3u8]/usr/bin/aria2c",
         "--downloader-args",
