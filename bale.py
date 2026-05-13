@@ -370,17 +370,15 @@ async def download(text, chat_id):
 
             password = parts[2]
 
-            print(chat_id, url, password)
+            print(chat_id, url, password, PYTHON_BIN, f"{BASE_DIR}/dl.py")
 
             subprocess.run([
                 PYTHON_BIN,
-                f"{BASE_DIR}/stream_download.py",
+                f"{BASE_DIR}/dl.py",
                 chat_id,
                 url,
                 password
             ])
-
-            print(url, password)
 
             parts = split_rar(chat_id)
 
