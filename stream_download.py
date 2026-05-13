@@ -9,6 +9,7 @@ import html
 import datetime
 from tqdm import tqdm
 import time
+import traceback
 
 def send_message1(chat_id, text):
     try:
@@ -103,5 +104,7 @@ if __name__ == "__main__":
     chat_id = sys.argv[1]
     target_url = sys.argv[2]
     password = sys.argv[3]
+
+    print(sys.argv)
 
     asyncio.run(download_streamable(chat_id, target_url, password))
