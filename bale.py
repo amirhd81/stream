@@ -370,7 +370,13 @@ async def download(text, chat_id):
 
             password = parts[2]
 
-            await download_streamable(chat_id, url, password)
+            run([
+                PYTHON_BIN,
+                f"{BASE_DIR}/stream_download.py",
+                chat_id,
+                url,
+                password
+            ], cwd=DOWNLOAD_DIR)
 
             parts = split_rar(chat_id)
 
