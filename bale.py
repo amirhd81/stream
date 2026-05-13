@@ -370,15 +370,13 @@ def download(text, chat_id):
 
             password = parts[2]
 
-            print(chat_id, url, password, PYTHON_BIN, f"{BASE_DIR}/dl.py")
-
             subprocess.run([
                 PYTHON_BIN,
-                f"{BASE_DIR}/dl.py",
+                f"{BASE_DIR}/stream_download.py",
                 chat_id,
                 url,
                 password
-            ])
+            ], shell=True)
 
             parts = split_rar(chat_id)
 
@@ -447,7 +445,7 @@ def download(text, chat_id):
             }
 
     except Exception as e:
-        send_message(str(e), chat_id)
+        send_message1(chat_id, str(e))
         return {
             "ok": False,
             "error": str(e)
