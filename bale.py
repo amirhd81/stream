@@ -370,6 +370,8 @@ async def download(text, chat_id):
 
             password = parts[2]
 
+            print(chat_id, url, password)
+
             subprocess.Popenn([
                 PYTHON_BIN,
                 f"{BASE_DIR}/stream_download.py",
@@ -377,6 +379,8 @@ async def download(text, chat_id):
                 url,
                 password
             ])
+
+            print(url, password)
 
             parts = split_rar(chat_id)
 
