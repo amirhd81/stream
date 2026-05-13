@@ -246,6 +246,26 @@ async def download_inc(chat_id, url):
                 progress.update(len(chunk))
 
 
+def download_patreon(chat_id, url):
+    send_message1(chat_id, "Starting download")
+
+    output_path = os.path.join(DOWNLOAD_DIR, "video.%(ext)s")
+
+    run([
+        "/root/miniconda3/envs/stream/bin/yt-dlp",
+        "-4",
+        "--add-header",
+        "'Referer: https://www.patreon.com/'",
+        "--downloader",
+        "[m3u8]/usr/bin/aria2c",
+        "--downloader-args",
+        "aria2c:-x:16:-k:1M:-4",
+        "-o",
+        output_path,
+        url
+    ], cwd=DOWNLOAD_DIR)
+    
+
     
 def download_yt(chat_id, url, height):
     send_message1(chat_id, f"Starting download at {height}p...")
@@ -302,99 +322,6 @@ def download(text, chat_id):
             send_message1(chat_id, "Use Buttons")
             print(chat_id)
 
-        # ----------------------------------------
-        # /search
-        # ----------------------------------------
-
-        if command == "/search":
-
-            if len(parts) < 3:
-                send_message(chat_id, "Invalid search command")
-                return {"ok": False}
-
-            search_type = parts[1]
-
-            # ------------------------------------
-            # global search
-            # ------------------------------------
-
-            if search_type == "global":
-
-                query = " ".join(parts[2:])
-
-                result = subprocess.run(
-                    [
-                        PYTHON_BIN,
-                        "ytSearch.py",
-                        "global",
-                        query
-                    ],
-                    capture_output=True,
-                    text=True
-                )
-
-                send_message(chat_id, result.stdout[:4000])
-
-            # ------------------------------------
-            # uploads
-            # ------------------------------------
-
-            elif search_type == "uploads":
-
-                if len(parts) < 3:
-                    send_message(chat_id, "Usage: /search uploads <channel_url>")
-                    return {"ok": False}
-                
-
-                channel_url = f"https://www.youtube.com/@{parts[2]}"
-
-                result = subprocess.run(
-                    [
-                        PYTHON_BIN,
-                        "ytSearch.py",
-                        "uploads",
-                        channel_url
-                    ],
-                    capture_output=True,
-                    text=True
-                )
-
-                send_message(chat_id, result.stdout[:4000])
-
-            # ------------------------------------
-            # channel search
-            # ------------------------------------
-
-            elif search_type == "channel":
-
-                if len(parts) < 4:
-                    send_message(chat_id, "Usage: /search channel <channel_url> <query>")
-                    return {"ok": False}
-
-                channel_url = f"https://www.youtube.com/@{parts[2]}"
-                query = " ".join(parts[3:])
-
-                result = subprocess.run(
-                    [
-                        PYTHON_BIN,
-                        "ytSearch.py",
-                        "channel",
-                        channel_url,
-                        query
-                    ],
-                    capture_output=True,
-                    text=True
-                )
-
-                send_message(chat_id, result.stdout[:4000])
-
-            else:
-                send_message(chat_id, "Unknown search type")
-
-        # -----------------------------
-        # /yt URL QUALITY
-        # -----------------------------
-        
         if command == "/yt":
 
             if len(parts) != 3:
@@ -422,10 +349,6 @@ def download(text, chat_id):
                 "quality": quality
             }
 
-        
-        # -----------------------------
-        # /stream URL PASSWORD
-        # -----------------------------
 
         elif command == "/stream":
 
@@ -451,10 +374,7 @@ def download(text, chat_id):
                 "action": "streamable",
                 "url": url
             }
-        # -----------------------------
-        # /inc URL
-        # -----------------------------
-
+    
         elif command == "/inc":
 
             if len(parts) != 2:
@@ -466,6 +386,30 @@ def download(text, chat_id):
             url = parts[1]
 
             download_inc(chat_id, url)
+
+            parts = split_rar(chat_id)
+
+            drive(parts, chat_id)
+        
+            sendMessage(chat_id, "Download success")
+            
+            return {
+                "ok": True,
+                "action": "inc",
+                "url": url
+            }
+
+        elif command == "/patreon":
+
+            if len(parts) != 2:
+                return {
+                    "ok": False,
+                    "usage": "/patreon <url>"
+                }
+            
+            url = parts[1]
+
+            download_patreon(chat_id, url)
 
             parts = split_rar(chat_id)
 
@@ -495,8 +439,6 @@ def download(text, chat_id):
 @app.post("/webhook/streamable")
 async def telegram_webhook(request: Request):
     update = await request.json()
-
-    # print(json.dumps(update, indent=2, ensure_ascii=False))
 
     message = update.get("message", {})
     text = message.get("text", "").strip()
