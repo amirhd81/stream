@@ -52,6 +52,24 @@ def download_video(url, height):
         url
     ])
 
+def send_message1(chat_id, text):
+
+    try:
+        r = requests.post(
+            "https://tapi.bale.ai/751585554:XalUAe8C-fm5rgcUfvzPoezfILcSC7s5vSA/sendMessage",
+            json={
+                "chat_id": chat_id,
+                "text": text
+            },
+            timeout=30
+        )
+
+        print("STATUS:", r.status_code, flush=True)
+        print("BODY:", r.text, flush=True)
+
+    except Exception:
+        print("SEND MESSAGE FAILED", flush=True)
+        traceback.print_exc()
 
 
 def send_message(chat_id, text):
@@ -80,7 +98,7 @@ def download(text, chat_id):
 
         if command == "/start":
             print(chat_id)
-            sendMessage(chat_id, "Hello")
+            sendMessage1(chat_id, "Hello")
             print(chat_id)
 
         # ----------------------------------------
