@@ -90,4 +90,4 @@ if __name__ == "__main__":
     target_url = sys.argv[2]
     password = sys.argv[3]
 
-    asyncio.run(download_streamable(target_url, password))
+    asyncio.run(download_streamable(chat_id, target_url, password))
