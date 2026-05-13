@@ -37,7 +37,7 @@ def download_video(url, height):
 
     os.makedirs("download", exist_ok=True)
 
-    subprocess.Popen([
+    subprocess.run([
         "/root/miniconda3/envs/stream/bin/yt-dlp",
         "-4",
         "--downloader",
