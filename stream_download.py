@@ -10,6 +10,7 @@ import datetime
 from tqdm import tqdm
 import time
 import traceback
+import requests
 
 CHROMIUM_PATH = "/usr/bin/chromium-browser"
 DOWNLOAD_DIR = "download"
