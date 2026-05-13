@@ -63,11 +63,13 @@ def send_message1(chat_id, text):
                 "chat_id": chat_id,
                 "text": text,
                 "reply_markup": {
-                    "inline_keyboard": [
-                        {
-                            "text": "Youtube",
-                            "callback_data": "/yt"
-                        }
+                    "keyboard": [
+                        [
+                            {
+                                "text": "Youtube",
+                                "callback_data": "/yt"
+                            }
+                        ]
                     ]
                 }
             },
