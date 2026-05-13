@@ -83,7 +83,7 @@ def drive(files, chat_id):
             "--bind",
             "0.0.0.0",
             "copy",
-            "-P"
+            "-P",
             f,
             "gdrive:/vps"
         ], cwd=DOWNLOAD_DIR)
