@@ -32,6 +32,8 @@ def send_message1(chat_id, text):
 async def download_streamable(chat_id, url, password):
     logfile = open("network_log.txt", "w", encoding="utf-8")
 
+    send_message1(chat_id, "before playwright")
+
     async with async_playwright() as p:
         browser = await p.chromium.launch(
             executable_path=CHROMIUM_PATH,
@@ -40,6 +42,8 @@ async def download_streamable(chat_id, url, password):
         page = await browser.new_page()
 
         await page.goto(url, wait_until="domcontentloaded")
+
+        send_message1(chat_id, "opened page")
 
         async def log_request(request):
             timestamp = datetime.datetime.now().isoformat()
@@ -57,6 +61,7 @@ async def download_streamable(chat_id, url, password):
         await page.fill('form[name="video-password"] input[name="password"]', password)
         await page.click('button[type="submit"]')
         await page.wait_for_timeout(5000)
+        send_message1(chat_id, "button clicked")
         html_text = await page.inner_html("div.svp-desktop-player")
         await page.screenshot(path="page.png", full_page=True)
         await browser.close()
@@ -75,6 +80,8 @@ async def download_streamable(chat_id, url, password):
     pattern = r'<source[^>]+src="([^"]+)"'
 
     match = re.search(pattern, str(html_text))
+
+    send_message1(chat_id, "get download url")
 
     download_url = html.unescape(match.group(1))
 
