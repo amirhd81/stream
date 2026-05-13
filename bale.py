@@ -320,7 +320,7 @@ def send_message(chat_id, text):
         }
         
 
-async def download(text, chat_id):
+def download(text, chat_id):
     try:
         parts = text.split()
 
@@ -402,7 +402,7 @@ async def download(text, chat_id):
             
             url = parts[1]
 
-            await download_inc(chat_id, url)
+            # await download_inc(chat_id, url)
 
             parts = split_rar(chat_id)
 
@@ -467,4 +467,4 @@ async def telegram_webhook(request: Request):
             "error": "No text found"
         }
 
-    await download(text, chat_id)
+    download(text, chat_id)
