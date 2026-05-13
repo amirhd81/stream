@@ -89,6 +89,15 @@ def drive(files, chat_id):
         ], cwd=DOWNLOAD_DIR)
 
     send_message1(chat_id, "All files uploaded successfully.")
+    
+    run([
+        "rm",
+        "-rf",
+        DOWNLOAD_DIR
+    ])
+    
+    send_message1(chat_id, "Removed parts")
+
 
 
 def split_rar(chat_id):
