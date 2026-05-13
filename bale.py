@@ -376,7 +376,7 @@ async def download(text, chat_id):
                 chat_id,
                 url,
                 password
-            ], cwd=DOWNLOAD_DIR)
+            ])
 
             parts = split_rar(chat_id)
 
