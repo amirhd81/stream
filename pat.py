@@ -31,10 +31,10 @@ def download_video(url, height):
 
     format_str = f"bestvideo[height<={height}]+bestaudio/best[height<={height}]"
 
-    run(f"curl -L -H 'Referer: https://ln5.sync.com/' -O '{url}'")
+    # run(f"curl -L -H 'Referer: https://ln5.sync.com/' -O '{url}'")
     
 
-    # run(f"yt-dlp -4 --add-header 'Referer: https://www.patreon.com/' --downloader [m3u8]aria2c --downloader-args aria2c:-x:16:-k:1M:-4  -o '{os.path.join(DOWNLOAD_DIR, "video.%(ext)s")}' {url}")
+    run(f"yt-dlp -4 --add-header 'Referer: https://www.patreon.com/' --downloader [m3u8]aria2c --downloader-args aria2c:-x:16:-k:1M:-4  -o '{os.path.join(DOWNLOAD_DIR, "video.%(ext)s")}' {url}")
     # run(f"yt-dlp -4 --add-header 'Referer: https://ln5.sync.com/' -o '{os.path.join(DOWNLOAD_DIR, "video.%(ext)s")}' '{url}'")
 
 
@@ -114,8 +114,8 @@ def git_push(files):
 def main(url, height):
     setup_env()
     download_video(url, height)
-    # parts = split_rar()
+    parts = split_rar()
     # git_push_in_batches(parts, 10, 8)
 
 if __name__ == "__main__": 
-    main("https://m218.syncusercontent1.com/mfs-60:6686d36ad98209359e991b67fc6fc8d4=============================/p/Wake%20Up%20Dead%20Man%20A%20Knives%20Out%20Mystery%20(2025)%20UNCUT.mp4?allowdd=0&datakey=YBSRFI0PdgKwHaNrLplPdO4XQbLPlEe0Uiimsd9t1+xW8JAPcueVeFA+dR7LynLRrm1ZqvmUpTGlNYs/SBTRIHhY9IeUusC0rgGkqGbBj+cW8hAvET4yOYk1TdlTF1HIskl7INI/0bPPc2GJulzPZuIL5U/puWZQ4589A8zaSIFB5Hbq/pdJwT7umrPvPlA9TrvhSUa/hBnwi7YRxLLgrh6jVYHiPaMeEWeM6geq0vwbuEi1hjHBvamcA5GekL0AquPPmbbcNP2XxKFv6I4fRMMEnZjZsW0v5T1kh1rurAkbXDXi3I0/BYILN/VXZXr/VO4CNAoRastuZHUQEKgHhw&engine=ln-3.1.38&errurl=lH7at6uQT3lJbz1xquf2ACG1xTQ4w5zurWBzzzy2UV9xMwQvxIsk7x9Wj5+05w8eA903dakh3RJcYVizU1eeu9LA2+c1eAdNjGqUKS2jc1xzBmglCCujkLHliHmJY5PxJhZQZ6k0gpT9cg5CADmfbNvkahWRn63kcndiHZ+oDLJ79cFYUDFkJ+1BorjUxeayBUg6TN3DedpiLf00aWvniK56rgEIx05gOQbBU+p7pI/uFbMQ7cv36weca/JymyTj8SWgyQmCvYhacJYi/VkPQaOuIuvO5ga3lsXXqp4ih9fE0BLZwF3nMxDH9aebaBc4SccyJ5dp2SAGlddey6rzOw==&header1=Q29udGVudC1UeXBlOiB2aWRlby9tcDQ&header2=Q29udGVudC1EaXNwb3NpdGlvbjogYXR0YWNobWVudDsgZmlsZW5hbWU9Ildha2UlMjBVcCUyMERlYWQlMjBNYW4lMjBBJTIwS25pdmVzJTIwT3V0JTIwTXlzdGVyeSUyMCgyMDI1KSUyMFVOQ1VULm1wNCI7ZmlsZW5hbWUqPVVURi04JydXYWtlJTIwVXAlMjBEZWFkJTIwTWFuJTIwQSUyMEtuaXZlcyUyME91dCUyME15c3RlcnklMjAoMjAyNSklMjBVTkNVVC5tcDQ7&ipaddress=2380504788&linkcachekey=dba92a010&linkoid=1558830005&mode=101&sharelink_id=32694952190005&timestamp=1778503073088&uagent=95e7d5ee30042362fb746b7f9ddea2007633c4e1&signature=67f8633ea41214ae9e68ac583f1905aad3f5dd2d&cachekey=60:6686d36ad98209359e991b67fc6fc8d4=============================", "480")
+    main("https://host.patreaction.com/stream.m3u8?token=MWhMWitpNzk0czJSMm44OThaRGR5dz09Ono0aWFKbDRudWY5a3IwY3pqdnJKUS9QdmVTZENscy9kb25rdkNYc0R2ajlmazM4QzNxWEJxQ3o0ZE1xaTk0NVhDRlBOM3FaeUJYNzRwbW5ST1ByZGgvV0FjSXJDUTlnVXFpR1RzQ0JmT05HcWhEdnhUQXV0dUUvMXduc20xaTgvRnRCRkpwanJzQXBodkgxS3ZvbWVzZWRXYnAvc3BBRU9BLzBwbVU0R3VJZWord1FXUnpkTVhBeGJUaTY1MVgvV1V5bTUwNSsvdEVCVitvL0FxN0pLRmNPVDhEdDNPb0pTYkI2T2JQNFJOaTlyTFpRbkZwM1BJT2JQSk5Pdy9iNGlDQVlHZVRjckdxcEs0U3ZaRSt5aVVVSHBhTHYzc1o1QitSNGxkdzI5K3RRaGp6U1E4ZUx1MTFpWDgzNlFmbVhIckwxekQ3WE1jU3d6eUh6RW5OaXVZbE1VZkRGdU10OUVlbVBybjQxSnIyTU93cUxXcXhMSFlNYlRWNmRsOGMxMmR5YTVnVGE0MXZPT3E2K3FOY243L0dvWVAwVDMycTVGWVlkQnN0Y2p4cEV4aG5id095QzZIcXVRMDM4dHoyRHROUFpieDlnc3lRTlBvNk5IaGExWitXRWl3SU0wbkY5andlVDZNbzBYZU1XUlp2RnJqU3RuU0xJZW9OZVZkT3luYlpqU0RMcFViYm5wcWJGeXN4cmJhOHE4bFZzQjBONkZDb0FiTllPanNhOFVUMmhQZFNxQnZJVEdEbVJ5L1ZZdUVSaGhoVDhNVzhzT254c05tY3pYK2JFYW5sTzc2Tm8xamdpN29waU5MYy9hTUFyK2JySldHVVZaQ2RmOU9DMzZoUkFaZjdRKzFidzdobDFLSk9yYW1qdXZNUDF1MC9FK21UcHRZQ2Zkb2FPbE9ETVE4aWNULzdPL2lPUDhkNnpJZ0dsRlVodDFIU1lqTmJlV0NZZ1llL0c3QlF0Ny9LajNlRG5kRGVFNFFUcDlSWS80Ulh5K1d1WVpNV0p2VDA1eXRGeUl2cFdlUzlnazY5d2FneFNHMnkzTGZZS3JpY2o2NjVMbS90dDQ2S2NzQ3RnNGFGdURsdXBkOUhsNWRHNGw0VWtUK1pzMG5nMitIVEVvSU5YQmlKRnRWcm5JWTliR0VtV1NUR1RKdEw3bVhMR0lKRzNrdERHcDRBRm5DUGNsWENFZTFrMkI2Mk1OeW1MaG0vdWdLdEZoS0hsNWYrNXc2VVMwTEJPb3d0Y0FkVm10WUM5ZlZ1RklDT0sxanNBR1FleGg1NFdsb0N1d2Naenp0OFYzeHloQmhvcmcxWEhUVWVNNDhOcVZpVVNSSkZvbTIwNXB0SW1GSjFOMmRVLzk&quality=medium", "480")
