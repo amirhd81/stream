@@ -15,6 +15,7 @@ import time
 
 app = FastAPI()
 
+CHROMIUM_PATH = "/usr/bin/chromium-browser"
 PYTHON_BIN = "/root/miniconda3/envs/stream/bin/python"
 BASE_DIR = "/root/strem"
 DOWNLOAD_DIR = "download"
