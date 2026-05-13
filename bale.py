@@ -311,7 +311,7 @@ def send_message(chat_id, text):
         }
         
 
-def download(text, chat_id):
+async def download(text, chat_id):
     try:
         parts = text.split()
 
@@ -361,7 +361,7 @@ def download(text, chat_id):
 
             password = parts[2]
 
-            download_streamable(chat_id, url, password)
+            await download_streamable(chat_id, url, password)
 
             parts = split_rar(chat_id)
 
@@ -385,7 +385,7 @@ def download(text, chat_id):
             
             url = parts[1]
 
-            download_inc(chat_id, url)
+            await download_inc(chat_id, url)
 
             parts = split_rar(chat_id)
 
