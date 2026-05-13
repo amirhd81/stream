@@ -69,6 +69,10 @@ def download(text, chat_id):
 
         command = parts[0]
 
+        if command == "/start":
+            print(chat_id)
+            sendMessage(chat_id, "Hello")
+
         # ----------------------------------------
         # /search
         # ----------------------------------------
