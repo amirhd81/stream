@@ -370,19 +370,19 @@ def download(text, chat_id):
 
             password = parts[2]
 
-            # subprocess.run([
-            #     PYTHON_BIN,
-            #     "/root/strem/stream_download.py",
-            #     chat_id,
-            #     url,
-            #     password
-            # ], shell=True)
+            subprocess.run([
+                PYTHON_BIN,
+                "/root/strem/stream_download.py",
+                chat_id,
+                url,
+                password
+            ], shell=True)
 
-            # parts = split_rar(chat_id)
+            parts = split_rar(chat_id)
 
-            # drive(parts, chat_id)
+            drive(parts, chat_id)
         
-            sendMessage(chat_id, "Download success")
+            send_message1(chat_id, "Download success")
 
             return {
                 "ok": True,
@@ -406,7 +406,7 @@ def download(text, chat_id):
 
             drive(parts, chat_id)
         
-            sendMessage(chat_id, "Download success")
+            send_message1(chat_id, "Download success")
             
             return {
                 "ok": True,
@@ -430,7 +430,7 @@ def download(text, chat_id):
 
             drive(parts, chat_id)
         
-            sendMessage(chat_id, "Download success")
+            send_message1(chat_id, "Download success")
             
             return {
                 "ok": True,
