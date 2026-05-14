@@ -183,6 +183,48 @@ def download_yt(chat_id, url, height):
         output_path,
         url
     ])
+    
+def download_twitch(chat_id, url, height, start, end):
+    send_message1(chat_id, f"Starting download at {height}p...")
+    
+    format_str = f"bestvideo[height<={height}]+bestaudio/best[height<={height}]"
+
+    output_path = os.path.join(DOWNLOAD_DIR, "video.%(ext)s")
+
+    os.makedirs(DOWNLOAD_DIR, exist_ok=True)
+
+    if (start and end):
+        regex = f"*{start}-{end}"
+        
+        subprocess.run([
+            "/root/miniconda3/envs/stream/bin/yt-dlp",
+            "-4",
+            "--downloader",
+            "[m3u8]/usr/bin/aria2c",
+            "--downloader-args",
+            "aria2c:-x:16:-k:1M:-4",
+            "--download-sections",
+            regex,
+            "-f",
+            format_str,
+            "-o",
+            output_path,
+            url
+        ])
+    else:
+        subprocess.run([
+            "/root/miniconda3/envs/stream/bin/yt-dlp",
+            "-4",
+            "--downloader",
+            "[m3u8]/usr/bin/aria2c",
+            "--downloader-args",
+            "aria2c:-x:16:-k:1M:-4",
+            "-f",
+            format_str,
+            "-o",
+            output_path,
+            url
+        ])
 
 
 def send_message(chat_id, text):
@@ -217,6 +259,7 @@ def download(text, chat_id):
         if command == "/yt":
 
             if len(parts) != 3:
+                send_message1(chat_id, "/yt <url> <360|480|720>")
                 return {
                     "ok": False,
                     "usage": "/yt <url> <360|480|720>"
@@ -241,10 +284,43 @@ def download(text, chat_id):
                 "quality": quality
             }
 
+        if command == "/twitch":
+
+            if len(parts) < 3:
+                send_message1(chat_id, "/twitch <url> 360|480|720 start(00:00:00) end(06:00:00)")
+                return {
+                    "ok": False,
+                    "usage": "/twitch <url> start(00:00:00) end(06:00:00)"
+                }
+            
+            url = parts[1]
+
+            quality = parts[2]
+
+            start = parts[3]
+
+            end = parts[4]
+
+            download_twitch(chat_id, url, quality, start, end)
+
+            parts = split_rar(chat_id)
+
+            drive(parts, chat_id)
+        
+            send_message1(chat_id, "Download success")
+
+            return {
+                "ok": True,
+                "action": "youtube",
+                "url": url,
+                "quality": quality
+            }
+
 
         elif command == "/stream":
 
             if len(parts) != 3:
+                send_message1(chat_id, "/stream <url> <password")
                 return {
                     "ok": False,
                     "usage": "/stream <url> <password>"
@@ -276,6 +352,7 @@ def download(text, chat_id):
         elif command == "/inc":
 
             if len(parts) != 2:
+                send_message1(chat_id, "/inc <url>")
                 return {
                     "ok": False,
                     "usage": "/inc <url>"
@@ -287,7 +364,7 @@ def download(text, chat_id):
                 PYTHON_BIN,
                 "/root/strem/inc_download.py",
                 str(chat_id),
-                url,Ï
+                url
             ])
 
             parts = split_rar(chat_id)
@@ -303,7 +380,7 @@ def download(text, chat_id):
             }
 
         elif command == "/patreon":
-
+            send_message1(chat_id, "/patreon <url>")
             if len(parts) != 2:
                 return {
                     "ok": False,
