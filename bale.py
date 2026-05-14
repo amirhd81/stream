@@ -226,6 +226,40 @@ def download_twitch(chat_id, url, height, start, end):
             url
         ])
 
+def send_t_file_size(chat_id, url, height, start, end):    
+    format_str = f"bestvideo[height<={height}]+bestaudio/best[height<={height}]"
+
+    if (start and end):
+        regex = f"*{start}-{end}"
+        
+        result = subprocess.run([
+            "/root/miniconda3/envs/stream/bin/yt-dlp",
+            "-4",
+            "--download-sections",
+            regex,
+            "-f",
+            format_str,
+            "--print",
+            "%(filesize_approx)s",
+            url
+        ], capture_output=True, text=True)
+        size = result.stdout.strip()
+        send_message1(chat_id, f"Size: {size}")
+        
+    else:
+        result = subprocess.run([
+            "/root/miniconda3/envs/stream/bin/yt-dlp",
+            "-4",
+            "-f",
+            format_str,
+            "--print",
+            "%(filesize_approx)s",
+            url
+        ], capture_output=True, text=True)
+        size = result.stdout.strip()
+        send_message1(chat_id, f"Size: {size}")
+
+
 
 def send_message(chat_id, text):
     try:
@@ -411,6 +445,32 @@ def download(text, chat_id):
             return {
                 "ok": True,
                 "action": "clean",
+            }
+
+        elif command == "/tsize":
+
+            if len(parts) < 3:
+                send_message1(chat_id, "/tsize <url> 360|480|720 start(00:00:00) end(06:00:00)")
+                return {
+                    "ok": False,
+                    "usage": "/tsize <url> start(00:00:00) end(06:00:00)"
+                }
+            
+            url = parts[1]
+
+            quality = parts[2]
+
+            start = parts[3]
+
+            end = parts[4]
+
+            send_t_file_size(chat_id, url, quality, start, end)
+
+            return {
+                "ok": True,
+                "action": "youtube",
+                "url": url,
+                "quality": quality
             }
         
         else:
