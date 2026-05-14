@@ -232,7 +232,7 @@ def download(text, chat_id):
 
             drive(parts, chat_id)
         
-            sendMessage(chat_id, "Download success")
+            send_message1(chat_id, "Download success")
 
             return {
                 "ok": True,
