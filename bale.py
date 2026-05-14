@@ -12,6 +12,7 @@ import html
 import datetime
 from tqdm import tqdm
 import time
+import signal
 
 app = FastAPI()
 
@@ -168,7 +169,8 @@ def download_yt(chat_id, url, height):
 
     os.makedirs(DOWNLOAD_DIR, exist_ok=True)
 
-    subprocess.run([
+
+    process = subprocess.run([
         "/root/miniconda3/envs/stream/bin/yt-dlp",
         "-4",
         "--downloader",
@@ -183,6 +185,9 @@ def download_yt(chat_id, url, height):
         output_path,
         url
     ])
+    
+    with open("/tmp/bot.pid", "w") as f:
+        f.write(str(process.pid))
     
 def download_twitch(chat_id, url, height, start, end):
     send_message1(chat_id, f"Starting download at {height}p...")
@@ -310,6 +315,9 @@ def download(text, chat_id):
             drive(parts, chat_id)
         
             send_message1(chat_id, "Download success")
+
+            if os.path.exists("/tmp/bot.pid"):
+                os.remove("/tmp/bot.pid")
 
             return {
                 "ok": True,
@@ -446,6 +454,21 @@ def download(text, chat_id):
                 "ok": True,
                 "action": "clean",
             }
+
+        elif commadn == "/cancel":
+            if os.path.exists("/tmp/bot.pid"):
+
+                with open("/tmp/bot.pid") as f:
+                    pid = int(f.read())
+
+                os.kill(pid, signal.SIGTERM)
+
+                os.remove("/tmp/bot.pid")
+
+                send_message1(chat_id, "Job cancelled")
+
+            else:
+                send_message1(chat_id, "No active job")
 
         elif command == "/tsize":
 
