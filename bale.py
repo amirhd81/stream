@@ -203,7 +203,7 @@ def download_yt(chat_id, url, height):
         if chat_id in processes:
             del processes[chat_id]
 
-        send_message1("Download finished")
+        send_message1(chat_id, "Download finished")
 
         parts = split_rar(chat_id)
 
