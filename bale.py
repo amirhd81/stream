@@ -27,8 +27,6 @@ DOWNLOAD_DIR = "download"
 SPLIT_SIZE = "90m"
 ARCHIVE_NAME = "video_archive"
 
-video_path = os.path.join(DOWNLOAD_DIR, "video.mp4")
-
 def send_message1(chat_id, text):
     try:
         r = requests.post(
@@ -109,6 +107,8 @@ def drive(files, chat_id):
 
 def split_rar(chat_id):
     send_message1(chat_id, f"Splitting into {SPLIT_SIZE} parts...")
+
+    video_path = os.path.join(DOWNLOAD_DIR, "video.mp4")
     
     if not os.path.exists(video_path):
 
