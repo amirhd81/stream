@@ -13,7 +13,9 @@ import datetime
 from tqdm import tqdm
 import time
 import signal
+import threading
 
+processes = {}
 
 app = FastAPI()
 
@@ -177,8 +179,7 @@ def download_yt(chat_id, url, height):
 
     os.makedirs(DOWNLOAD_DIR, exist_ok=True)
 
-
-    process = subprocess.run([
+    process = subprocess.Popen([
         "/root/miniconda3/envs/stream/bin/yt-dlp",
         "-4",
         "--downloader",
@@ -194,10 +195,24 @@ def download_yt(chat_id, url, height):
         url
     ])
 
-    print(process)
-    
-    with open("/tmp/bot.pid", "w") as f:
-        f.write(str(process.pid))
+    processes[chat_id] = process
+
+    def monitor():
+        process.wait()
+
+        if chat_id in processes:
+            del processes[chat_id]
+
+        send_message1("Download finished")
+
+        parts = split_rar(chat_id)
+
+        drive(parts, chat_id)
+        
+        send_message1(chat_id, "Operation success")
+
+    threading.Thread(target=monitor, daemon=True).start()
+
     
 def download_twitch(chat_id, url, height, start, end):
     send_message1(chat_id, f"Starting download at {height}p...")
@@ -277,24 +292,6 @@ def send_t_file_size(chat_id, url, height, start, end):
         size = result.stdout.strip()
         send_message1(chat_id, f"Size: {size}")
 
-
-
-def send_message(chat_id, text):
-    try:
-        requests.post(
-            "https://tapi.bale.ai/751585554:XalUAe8C-fm5rgcUfvzPoezfILcSC7s5vSA/sendMessage",
-            json={
-                "chat_id": chat_id,
-                "text": text
-            }
-        )
-
-    except Exception as e:
-        print(str(e))
-        return {
-            "ok": False,
-            "error": str(e)
-        }
         
 
 def download(text, chat_id):
@@ -327,15 +324,6 @@ def download(text, chat_id):
             quality = parts[2]
 
             download_yt(chat_id, url, quality)
-
-            parts = split_rar(chat_id)
-
-            drive(parts, chat_id)
-        
-            send_message1(chat_id, "Download success")
-
-            if os.path.exists("/tmp/bot.pid"):
-                os.remove("/tmp/bot.pid")
 
             return {
                 "ok": True,
