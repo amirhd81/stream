@@ -108,6 +108,7 @@ def drive(files, chat_id):
 def split_rar(chat_id):
     send_message1(chat_id, f"Splitting into {SPLIT_SIZE} parts...")
 
+
     video_path = os.path.join(DOWNLOAD_DIR, "video.mp4")
     
     if not os.path.exists(video_path):
@@ -151,7 +152,7 @@ def download_patreon(chat_id, url):
     with open(LOCK_FILE, "w") as f:
         f.write("running")
 
-    run([
+    process = subprocess.Popen([
         "/root/miniconda3/envs/stream/bin/yt-dlp",
         "-4",
         "--add-header",
@@ -163,8 +164,100 @@ def download_patreon(chat_id, url):
         "-o",
         output_path,
         url
-    ], cwd=DOWNLOAD_DIR)
+    ])
+
+    processes[chat_id] = process
+
+    def monitor1():
+        process.wait()
+
+        if chat_id in processes:
+            del processes[chat_id]
+
+        send_message1("Download finished")
+
+        parts = split_rar(chat_id)
+
+        drive(parts, chat_id)
+        
+        send_message1(chat_id, "Operation success")
+
+        if os.path.exists(LOCK_FILE):
+            os.remove(LOCK_FILE)
+
+    threading.Thread(target=monitor1, daemon=True).start()
+
+
+def download_inc(chat_id, url):
+    send_message1(chat_id, "Starting download")
+
+    with open(LOCK_FILE, "w") as f:
+        f.write("running")
+
+    process = subprocess.Popen([
+        PYTHON_BIN,
+        "/root/strem/inc_download.py",
+        str(chat_id),
+        url
+    ])
+
+    processes[chat_id] = process
+
+    def monitor4():
+        process.wait()
+
+        if chat_id in processes:
+            del processes[chat_id]
+
+        send_message1("Download finished")
+
+        parts = split_rar(chat_id)
+
+        drive(parts, chat_id)
+        
+        send_message1(chat_id, "Operation success")
+
+        if os.path.exists(LOCK_FILE):
+            os.remove(LOCK_FILE)
+
+    threading.Thread(target=monitor4, daemon=True).start()
     
+
+def download_streamable(chat_id, url, password):
+    send_message1(chat_id, "Starting download")
+
+    with open(LOCK_FILE, "w") as f:
+        f.write("running")
+        
+
+    process = subprocess.Popen([
+        PYTHON_BIN,
+        "/root/strem/stream_download.py",
+        str(chat_id),
+        url,
+        password
+    ])
+
+    processes[chat_id] = process
+
+    def monitor3():
+        process.wait()
+
+        if chat_id in processes:
+            del processes[chat_id]
+
+        send_message1("Download finished")
+
+        parts = split_rar(chat_id)
+
+        drive(parts, chat_id)
+        
+        send_message1(chat_id, "Operation success")
+
+        if os.path.exists(LOCK_FILE):
+            os.remove(LOCK_FILE)
+
+    threading.Thread(target=monitor3, daemon=True).start()
 
     
 def download_yt(chat_id, url, height):
@@ -203,13 +296,16 @@ def download_yt(chat_id, url, height):
         if chat_id in processes:
             del processes[chat_id]
 
-        send_message1(chat_id, "Download finished")
+        send_message1("Download finished")
 
         parts = split_rar(chat_id)
 
         drive(parts, chat_id)
         
         send_message1(chat_id, "Operation success")
+
+        if os.path.exists(LOCK_FILE):
+            os.remove(LOCK_FILE)
 
     threading.Thread(target=monitor, daemon=True).start()
 
@@ -226,72 +322,44 @@ def download_twitch(chat_id, url, height, start, end):
 
     os.makedirs(DOWNLOAD_DIR, exist_ok=True)
 
-    if (start and end):
-        regex = f"*{start}-{end}"
+    regex = f"*{start}-{end}"
         
-        subprocess.run([
-            "/root/miniconda3/envs/stream/bin/yt-dlp",
-            "-4",
-            "--downloader",
-            "[m3u8]/usr/bin/aria2c",
-            "--downloader-args",
-            "aria2c:-x:16:-k:1M:-4",
-            "--download-sections",
-            regex,
-            "-f",
-            format_str,
-            "-o",
-            output_path,
-            url
-        ])
-    else:
-        subprocess.run([
-            "/root/miniconda3/envs/stream/bin/yt-dlp",
-            "-4",
-            "--downloader",
-            "[m3u8]/usr/bin/aria2c",
-            "--downloader-args",
-            "aria2c:-x:16:-k:1M:-4",
-            "-f",
-            format_str,
-            "-o",
-            output_path,
-            url
-        ])
+    process = subprocess.Popen([
+        "/root/miniconda3/envs/stream/bin/yt-dlp",
+        "-4",
+        "--downloader",
+        "[m3u8]/usr/bin/aria2c",
+        "--downloader-args",
+        "aria2c:-x:16:-k:1M:-4",
+        "--download-sections",
+        regex,
+        "-f",
+        format_str,
+        "-o",
+        output_path,
+        url
+    ])
 
-def send_t_file_size(chat_id, url, height, start, end):    
-    format_str = f"bestvideo[height<={height}]+bestaudio/best[height<={height}]"
+    processes[chat_id] = process
 
-    if (start and end):
-        regex = f"*{start}-{end}"
+    def monitor2():
+        process.wait()
+
+        if chat_id in processes:
+            del processes[chat_id]
+
+        send_message1("Download finished")
+
+        parts = split_rar(chat_id)
+
+        drive(parts, chat_id)
         
-        result = subprocess.run([
-            "/root/miniconda3/envs/stream/bin/yt-dlp",
-            "-4",
-            "--download-sections",
-            regex,
-            "-f",
-            format_str,
-            "--print",
-            "%(filesize_approx)s",
-            url
-        ], capture_output=True, text=True)
-        size = result.stdout.strip()
-        send_message1(chat_id, f"Size: {size}")
-        
-    else:
-        result = subprocess.run([
-            "/root/miniconda3/envs/stream/bin/yt-dlp",
-            "-4",
-            "-f",
-            format_str,
-            "--print",
-            "%(filesize_approx)s",
-            url
-        ], capture_output=True, text=True)
-        size = result.stdout.strip()
-        send_message1(chat_id, f"Size: {size}")
+        send_message1(chat_id, "Operation success")
 
+        if os.path.exists(LOCK_FILE):
+            os.remove(LOCK_FILE)
+
+    threading.Thread(target=monitor2, daemon=True).start()
         
 
 def download(text, chat_id):
@@ -320,7 +388,6 @@ def download(text, chat_id):
                 }
             
             url = parts[1]
-
             quality = parts[2]
 
             download_yt(chat_id, url, quality)
@@ -342,20 +409,11 @@ def download(text, chat_id):
                 }
             
             url = parts[1]
-
             quality = parts[2]
-
             start = parts[3]
-
             end = parts[4]
 
             download_twitch(chat_id, url, quality, start, end)
-
-            parts = split_rar(chat_id)
-
-            drive(parts, chat_id)
-        
-            send_message1(chat_id, "Download success")
 
             return {
                 "ok": True,
@@ -373,26 +431,11 @@ def download(text, chat_id):
                     "ok": False,
                     "usage": "/stream <url> <password>"
                 }
+            
             url = parts[1]
-
             password = parts[2]
 
-            with open(LOCK_FILE, "w") as f:
-                f.write("running")
-
-            run([
-                PYTHON_BIN,
-                "/root/strem/stream_download.py",
-                str(chat_id),
-                url,
-                password
-            ])
-
-            parts = split_rar(chat_id)
-
-            drive(parts, chat_id)
-        
-            send_message1(chat_id, "Download success")
+            download_streamable(chat_id, url, password)
 
             return {
                 "ok": True,
@@ -411,21 +454,7 @@ def download(text, chat_id):
             
             url = parts[1]
 
-            with open(LOCK_FILE, "w") as f:
-                f.write("running")
-
-            run([
-                PYTHON_BIN,
-                "/root/strem/inc_download.py",
-                str(chat_id),
-                url
-            ])
-
-            parts = split_rar(chat_id)
-
-            drive(parts, chat_id)
-        
-            send_message1(chat_id, "Download success")
+            download_inc(chat_id, url)
             
             return {
                 "ok": True,
@@ -434,8 +463,8 @@ def download(text, chat_id):
             }
 
         elif command == "/patreon":
-            send_message1(chat_id, "/patreon <url>")
             if len(parts) != 2:
+                send_message1(chat_id, "/patreon <url>")
                 return {
                     "ok": False,
                     "usage": "/patreon <url>"
@@ -444,12 +473,6 @@ def download(text, chat_id):
             url = parts[1]
 
             download_patreon(chat_id, url)
-
-            parts = split_rar(chat_id)
-
-            drive(parts, chat_id)
-        
-            send_message1(chat_id, "Download success")
             
             return {
                 "ok": True,
@@ -471,48 +494,14 @@ def download(text, chat_id):
             }
 
         elif command == "/cancel":
-
-            if os.path.exists("/tmp/bot.pid"):
-                with open("/tmp/bot.pid") as f:
-                    pid = int(f.read())
-
-                os.kill(pid, signal.SIGTERM)
-
-                os.remove("/tmp/bot.pid")
-
-                if os.path.exists(DOWNLOAD_DIR):                 
-                    os.remove(DOWNLOAD_DIR)
-
-                send_message1(chat_id, "Job cancelled")
-
-            else:
-                send_message1(chat_id, "No active job")
-
-        elif command == "/tsize":
-
-            if len(parts) < 3:
-                send_message1(chat_id, "/tsize <url> 360|480|720 start(00:00:00) end(06:00:00)")
-                return {
-                    "ok": False,
-                    "usage": "/tsize <url> start(00:00:00) end(06:00:00)"
-                }
             
-            url = parts[1]
+            p = processes.get(chat_id)
 
-            quality = parts[2]
+            if p:
+                p.terminate()
+                del processes[chat_id]
 
-            start = parts[3]
-
-            end = parts[4]
-
-            send_t_file_size(chat_id, url, quality, start, end)
-
-            return {
-                "ok": True,
-                "action": "youtube",
-                "url": url,
-                "quality": quality
-            }
+            send_message1(chat_id, "Job cancelled")
         
         else:
             return {
