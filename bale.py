@@ -174,7 +174,7 @@ def download_patreon(chat_id, url):
         if chat_id in processes:
             del processes[chat_id]
 
-        send_message1("Download finished")
+        send_message1(chat_id, "Download finished")
 
         parts = split_rar(chat_id)
 
@@ -209,7 +209,7 @@ def download_inc(chat_id, url):
         if chat_id in processes:
             del processes[chat_id]
 
-        send_message1("Download finished")
+        send_message1(chat_id, "Download finished")
 
         parts = split_rar(chat_id)
 
@@ -246,7 +246,7 @@ def download_streamable(chat_id, url, password):
         if chat_id in processes:
             del processes[chat_id]
 
-        send_message1("Download finished")
+        send_message1(chat_id, "Download finished")
 
         parts = split_rar(chat_id)
 
@@ -296,7 +296,7 @@ def download_yt(chat_id, url, height):
         if chat_id in processes:
             del processes[chat_id]
 
-        send_message1("Download finished")
+        send_message1(chat_id, "Download finished")
 
         parts = split_rar(chat_id)
 
@@ -348,7 +348,7 @@ def download_twitch(chat_id, url, height, start, end):
         if chat_id in processes:
             del processes[chat_id]
 
-        send_message1("Download finished")
+        send_message1(chat_id, "Download finished")
 
         parts = split_rar(chat_id)
 
