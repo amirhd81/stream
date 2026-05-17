@@ -193,6 +193,8 @@ def download_yt(chat_id, url, height):
         output_path,
         url
     ])
+
+    print(process)
     
     with open("/tmp/bot.pid", "w") as f:
         f.write(str(process.pid))
