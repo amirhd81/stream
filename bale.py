@@ -14,14 +14,18 @@ from tqdm import tqdm
 import time
 import signal
 
+
 app = FastAPI()
 
+LOCK_FILE = "/tmp/bot_download.lock"
 CHROMIUM_PATH = "/usr/bin/chromium-browser"
 PYTHON_BIN = "/root/miniconda3/envs/stream/bin/python"
 BASE_DIR = "/root/strem"
 DOWNLOAD_DIR = "download"
 SPLIT_SIZE = "90m"
 ARCHIVE_NAME = "video_archive"
+
+video_path = os.path.join(DOWNLOAD_DIR, "video.mp4")
 
 def send_message1(chat_id, text):
     try:
@@ -103,8 +107,6 @@ def drive(files, chat_id):
 
 def split_rar(chat_id):
     send_message1(chat_id, f"Splitting into {SPLIT_SIZE} parts...")
-
-    video_path = os.path.join(DOWNLOAD_DIR, "video.mp4")
     
     if not os.path.exists(video_path):
 
@@ -144,6 +146,9 @@ def download_patreon(chat_id, url):
 
     output_path = os.path.join(DOWNLOAD_DIR, "video.%(ext)s")
 
+    with open(LOCK_FILE, "w") as f:
+        f.write("running")
+
     run([
         "/root/miniconda3/envs/stream/bin/yt-dlp",
         "-4",
@@ -162,6 +167,9 @@ def download_patreon(chat_id, url):
     
 def download_yt(chat_id, url, height):
     send_message1(chat_id, f"Starting download at {height}p...")
+
+    with open(LOCK_FILE, "w") as f:
+        f.write("running")
     
     format_str = f"bestvideo[height<={height}]+bestaudio/best[height<={height}]"
 
@@ -191,6 +199,9 @@ def download_yt(chat_id, url, height):
     
 def download_twitch(chat_id, url, height, start, end):
     send_message1(chat_id, f"Starting download at {height}p...")
+
+    with open(LOCK_FILE, "w") as f:
+        f.write("running")
     
     format_str = f"bestvideo[height<={height}]+bestaudio/best[height<={height}]"
 
@@ -290,6 +301,11 @@ def download(text, chat_id):
 
         command = parts[0]
 
+        if os.path.exists(LOCK_FILE):
+            send_message1(chat_id, "Another download is already running.")
+
+            return {"ok": True}
+
         if command == "/start":
             print(chat_id)
             send_message1(chat_id, "Use Buttons")
@@ -371,6 +387,9 @@ def download(text, chat_id):
 
             password = parts[2]
 
+            with open(LOCK_FILE, "w") as f:
+                f.write("running")
+
             run([
                 PYTHON_BIN,
                 "/root/strem/stream_download.py",
@@ -401,6 +420,9 @@ def download(text, chat_id):
                 }
             
             url = parts[1]
+
+            with open(LOCK_FILE, "w") as f:
+                f.write("running")
 
             run([
                 PYTHON_BIN,
@@ -449,21 +471,27 @@ def download(text, chat_id):
             cleanup(chat_id)
 
             cleanup_trash(chat_id)
+
+            if os.path.exists(LOCK_FILE):
+                os.remove(LOCK_FILE)
             
             return {
                 "ok": True,
                 "action": "clean",
             }
 
-        elif commadn == "/cancel":
-            if os.path.exists("/tmp/bot.pid"):
+        elif command == "/cancel":
 
+            if os.path.exists("/tmp/bot.pid"):
                 with open("/tmp/bot.pid") as f:
                     pid = int(f.read())
 
                 os.kill(pid, signal.SIGTERM)
 
                 os.remove("/tmp/bot.pid")
+
+                if os.path.exists(DOWNLOAD_DIR):                 
+                    os.remove(DOWNLOAD_DIR)
 
                 send_message1(chat_id, "Job cancelled")
 
