@@ -301,7 +301,7 @@ def download(text, chat_id):
 
         command = parts[0]
 
-        if os.path.exists(LOCK_FILE):
+        if os.path.exists(LOCK_FILE) and command == "/clean":
             send_message1(chat_id, "Another download is already running.")
 
             return {"ok": True}
